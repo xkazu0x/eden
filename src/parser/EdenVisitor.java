@@ -1,5 +1,5 @@
 // Generated from Eden.g4 by ANTLR 4.13.2
-package eden.parser;
+package parser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -10,6 +10,24 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  * operations with no return type.
  */
 public interface EdenVisitor<T> extends ParseTreeVisitor<T> {
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#prog}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProg(EdenParser.ProgContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#decl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDecl(EdenParser.DeclContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#expr0}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr0(EdenParser.Expr0Context ctx);
 	/**
 	 * Visit a parse tree produced by {@link EdenParser#expr}.
 	 * @param ctx the parse tree

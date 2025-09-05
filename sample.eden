@@ -1,1 +1,8 @@
-3+2+42+5+6
+x: int = 3;
+y := 6;
+int_result := x + y*10;
+
+a: float = 10.;
+b := .32;
+c := 21.;
+float_result := a + b + c;

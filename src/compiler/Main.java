@@ -1,6 +1,6 @@
-package eden.compiler;
+package compiler;
 
-import eden.parser.*;
+import parser.*;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
@@ -13,8 +13,9 @@ public class Main {
         CommonTokenStream token_stream = new CommonTokenStream(lexer);
         
         EdenParser parser = new EdenParser(token_stream);
-        ParseTree tree = parser.expr();
+        ParseTree tree = parser.prog();
+        System.out.println(tree.toStringTree(parser));
         
-        new Visitor().visit(tree);
+        //new Visitor().visit(tree);
     }
 }

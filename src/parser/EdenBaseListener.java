@@ -1,5 +1,5 @@
 // Generated from Eden.g4 by ANTLR 4.13.2
-package eden.parser;
+package parser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -12,6 +12,42 @@ import org.antlr.v4.runtime.tree.TerminalNode;
  */
 @SuppressWarnings("CheckReturnValue")
 public class EdenBaseListener implements EdenListener {
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterProg(EdenParser.ProgContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitProg(EdenParser.ProgContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDecl(EdenParser.DeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDecl(EdenParser.DeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExpr0(EdenParser.Expr0Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpr0(EdenParser.Expr0Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

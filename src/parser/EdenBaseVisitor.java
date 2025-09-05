@@ -1,5 +1,5 @@
 // Generated from Eden.g4 by ANTLR 4.13.2
-package eden.parser;
+package parser;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -12,6 +12,27 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
  */
 @SuppressWarnings("CheckReturnValue")
 public class EdenBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements EdenVisitor<T> {
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitProg(EdenParser.ProgContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDecl(EdenParser.DeclContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitExpr0(EdenParser.Expr0Context ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
