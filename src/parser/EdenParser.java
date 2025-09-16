@@ -100,6 +100,11 @@ public class EdenParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof EdenListener ) ((EdenListener)listener).exitProg(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof EdenVisitor ) return ((EdenVisitor<? extends T>)visitor).visitProg(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ProgContext prog() throws RecognitionException {
