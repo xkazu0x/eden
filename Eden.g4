@@ -1,0 +1,3 @@
+grammar Eden;
+
+prog: EOF;
