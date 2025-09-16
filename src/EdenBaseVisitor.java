@@ -1,5 +1,4 @@
 // Generated from Eden.g4 by ANTLR 4.13.2
-package parser;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**

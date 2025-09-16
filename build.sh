@@ -3,19 +3,20 @@
 export CLASSPATH=".:lib/antlr-4.13.2-complete.jar:$CLASSPATH"
 
 for arg in "$@"; do declare $arg='1'; done
-antlr4="java -Xmx500M -jar lib/antlr-4.13.2-complete.jar"
-compile="javac -sourcepath src/ -cp lib/* -d build/"
+
+antlr4="java -Xmx500M -cp lib/antlr-4.13.2-complete.jar:$CLASSPATH org.antlr.v4.Tool"
+grun="java -Xmx500M -cp lib/antlr-4.13.2-complete.jar:$CLASSPATH org.antlr.v4.gui.TestRig"
+
+compile="javac -sourcepath src -d build -cp lib/antlr-4.13.2-complete.jar"
+execute="java"
 
 mkdir -p build
 
-if [ -v par ]; then
-    $antlr4 -package parser -o src/parser -visitor Eden.g4
-    $compile src/parser/*.java
-fi
+$antlr4 -o src -visitor Eden.g4
 $compile src/*.java
 
 if [ -v run ]; then
     cd build
-    java Main
+    $execute Main
     cd ..
 fi
