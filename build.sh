@@ -1,4 +1,5 @@
 #!/bin/bash
+cd "$(dirname "$0")"
 
 export CLASSPATH=".:lib/antlr-4.13.2-complete.jar:$CLASSPATH"
 
