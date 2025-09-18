@@ -1,20 +1,30 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 
-export CLASSPATH=".:lib/antlr-4.13.2-complete.jar:$CLASSPATH"
+lib_dir="$(pwd)/lib"
+antlr_lib="$lib_dir/antlr-4.13.2-complete.jar"
+
+export CLASSPATH="$lib_dir:$antlr_lib:$CLASSPATH"
 
 for arg in "$@"; do declare $arg='1'; done
 
-antlr4="java -Xmx500M -cp lib/antlr-4.13.2-complete.jar:$CLASSPATH org.antlr.v4.Tool"
-grun="java -Xmx500M -cp lib/antlr-4.13.2-complete.jar:$CLASSPATH org.antlr.v4.gui.TestRig"
+antlr4="java -cp $antlr_lib:$CLASSPATH org.antlr.v4.Tool"
+grun="java -cp $antlr_lib:$CLASSPATH org.antlr.v4.gui.TestRig"
 
-compile="javac -sourcepath src -d build -cp lib/antlr-4.13.2-complete.jar"
+compile="javac -sourcepath src -d build"
 execute="java"
 
 mkdir -p build
 
 $antlr4 -o src -visitor Eden.g4
 $compile src/*.java
+
+if [ -v test ]; then
+    cp Eden.g4 build/Eden.g4
+    cd build
+    $grun Eden prog -gui ../example.eden
+    cd ..
+fi
 
 if [ -v run ]; then
     cd build
