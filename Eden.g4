@@ -3,11 +3,11 @@ grammar Eden;
 prog: (decl | expr)+ EOF        # Program
     ;
 
-decl: NAME ':' NAME '=' expr    # VariableDeclaration
+decl: NAME ':' NAME '=' INT     # VariableDeclaration
     ;
 
-expr: expr ('*' | '/') expr     # Multiplication
-    | expr ('+' | '-') expr     # Addition
+expr: expr '*' expr             # Multiplication
+    | expr '+' expr             # Addition
     | NAME                      # Variable
     | INT                       # Number
     ;

@@ -14,6 +14,7 @@ grun="java -cp $antlr_lib:$CLASSPATH org.antlr.v4.gui.TestRig"
 compile="javac -sourcepath src -d build"
 execute="java"
 
+if [ -v clean ]; then rm -rf build; fi
 mkdir -p build
 
 $antlr4 -o src -visitor Eden.g4
@@ -28,6 +29,6 @@ fi
 
 if [ -v run ]; then
     cd build
-    $execute Main
+    $execute Eden ../example.eden
     cd ..
 fi

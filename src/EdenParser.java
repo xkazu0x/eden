@@ -16,7 +16,7 @@ public class EdenParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, INT=7, NAME=8, WHITESPACE=9;
+		T__0=1, T__1=2, T__2=3, T__3=4, INT=5, NAME=6, WHITESPACE=7;
 	public static final int
 		RULE_prog = 0, RULE_decl = 1, RULE_expr = 2;
 	private static String[] makeRuleNames() {
@@ -28,13 +28,13 @@ public class EdenParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "':'", "'='", "'*'", "'/'", "'+'", "'-'"
+			null, "':'", "'='", "'*'", "'+'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, null, null, null, null, "INT", "NAME", "WHITESPACE"
+			null, null, null, null, null, "INT", "NAME", "WHITESPACE"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -198,9 +198,7 @@ public class EdenParser extends Parser {
 		public TerminalNode NAME(int i) {
 			return getToken(EdenParser.NAME, i);
 		}
-		public ExprContext expr() {
-			return getRuleContext(ExprContext.class,0);
-		}
+		public TerminalNode INT() { return getToken(EdenParser.INT, 0); }
 		public VariableDeclarationContext(DeclContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
@@ -233,7 +231,7 @@ public class EdenParser extends Parser {
 			setState(17);
 			match(T__1);
 			setState(18);
-			expr(0);
+			match(INT);
 			}
 		}
 		catch (RecognitionException re) {
@@ -353,7 +351,6 @@ public class EdenParser extends Parser {
 		ExprContext _prevctx = _localctx;
 		int _startState = 4;
 		enterRecursionRule(_localctx, 4, RULE_expr, _p);
-		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
@@ -402,15 +399,7 @@ public class EdenParser extends Parser {
 						setState(25);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(26);
-						_la = _input.LA(1);
-						if ( !(_la==T__2 || _la==T__3) ) {
-						_errHandler.recoverInline(this);
-						}
-						else {
-							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-							_errHandler.reportMatch(this);
-							consume();
-						}
+						match(T__2);
 						setState(27);
 						expr(5);
 						}
@@ -422,15 +411,7 @@ public class EdenParser extends Parser {
 						setState(28);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(29);
-						_la = _input.LA(1);
-						if ( !(_la==T__4 || _la==T__5) ) {
-						_errHandler.recoverInline(this);
-						}
-						else {
-							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-							_errHandler.reportMatch(this);
-							consume();
-						}
+						match(T__3);
 						setState(30);
 						expr(4);
 						}
@@ -473,32 +454,31 @@ public class EdenParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\t%\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u0007%\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0001\u0000\u0001\u0000\u0004\u0000\t\b\u0000\u000b"+
 		"\u0000\f\u0000\n\u0001\u0000\u0001\u0000\u0001\u0001\u0001\u0001\u0001"+
 		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0002\u0001\u0002\u0001"+
 		"\u0002\u0003\u0002\u0018\b\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001"+
 		"\u0002\u0001\u0002\u0001\u0002\u0005\u0002 \b\u0002\n\u0002\f\u0002#\t"+
-		"\u0002\u0001\u0002\u0000\u0001\u0004\u0003\u0000\u0002\u0004\u0000\u0002"+
-		"\u0001\u0000\u0003\u0004\u0001\u0000\u0005\u0006&\u0000\b\u0001\u0000"+
-		"\u0000\u0000\u0002\u000e\u0001\u0000\u0000\u0000\u0004\u0017\u0001\u0000"+
-		"\u0000\u0000\u0006\t\u0003\u0002\u0001\u0000\u0007\t\u0003\u0004\u0002"+
-		"\u0000\b\u0006\u0001\u0000\u0000\u0000\b\u0007\u0001\u0000\u0000\u0000"+
-		"\t\n\u0001\u0000\u0000\u0000\n\b\u0001\u0000\u0000\u0000\n\u000b\u0001"+
-		"\u0000\u0000\u0000\u000b\f\u0001\u0000\u0000\u0000\f\r\u0005\u0000\u0000"+
-		"\u0001\r\u0001\u0001\u0000\u0000\u0000\u000e\u000f\u0005\b\u0000\u0000"+
-		"\u000f\u0010\u0005\u0001\u0000\u0000\u0010\u0011\u0005\b\u0000\u0000\u0011"+
-		"\u0012\u0005\u0002\u0000\u0000\u0012\u0013\u0003\u0004\u0002\u0000\u0013"+
-		"\u0003\u0001\u0000\u0000\u0000\u0014\u0015\u0006\u0002\uffff\uffff\u0000"+
-		"\u0015\u0018\u0005\b\u0000\u0000\u0016\u0018\u0005\u0007\u0000\u0000\u0017"+
-		"\u0014\u0001\u0000\u0000\u0000\u0017\u0016\u0001\u0000\u0000\u0000\u0018"+
-		"!\u0001\u0000\u0000\u0000\u0019\u001a\n\u0004\u0000\u0000\u001a\u001b"+
-		"\u0007\u0000\u0000\u0000\u001b \u0003\u0004\u0002\u0005\u001c\u001d\n"+
-		"\u0003\u0000\u0000\u001d\u001e\u0007\u0001\u0000\u0000\u001e \u0003\u0004"+
-		"\u0002\u0004\u001f\u0019\u0001\u0000\u0000\u0000\u001f\u001c\u0001\u0000"+
-		"\u0000\u0000 #\u0001\u0000\u0000\u0000!\u001f\u0001\u0000\u0000\u0000"+
-		"!\"\u0001\u0000\u0000\u0000\"\u0005\u0001\u0000\u0000\u0000#!\u0001\u0000"+
-		"\u0000\u0000\u0005\b\n\u0017\u001f!";
+		"\u0002\u0001\u0002\u0000\u0001\u0004\u0003\u0000\u0002\u0004\u0000\u0000"+
+		"&\u0000\b\u0001\u0000\u0000\u0000\u0002\u000e\u0001\u0000\u0000\u0000"+
+		"\u0004\u0017\u0001\u0000\u0000\u0000\u0006\t\u0003\u0002\u0001\u0000\u0007"+
+		"\t\u0003\u0004\u0002\u0000\b\u0006\u0001\u0000\u0000\u0000\b\u0007\u0001"+
+		"\u0000\u0000\u0000\t\n\u0001\u0000\u0000\u0000\n\b\u0001\u0000\u0000\u0000"+
+		"\n\u000b\u0001\u0000\u0000\u0000\u000b\f\u0001\u0000\u0000\u0000\f\r\u0005"+
+		"\u0000\u0000\u0001\r\u0001\u0001\u0000\u0000\u0000\u000e\u000f\u0005\u0006"+
+		"\u0000\u0000\u000f\u0010\u0005\u0001\u0000\u0000\u0010\u0011\u0005\u0006"+
+		"\u0000\u0000\u0011\u0012\u0005\u0002\u0000\u0000\u0012\u0013\u0005\u0005"+
+		"\u0000\u0000\u0013\u0003\u0001\u0000\u0000\u0000\u0014\u0015\u0006\u0002"+
+		"\uffff\uffff\u0000\u0015\u0018\u0005\u0006\u0000\u0000\u0016\u0018\u0005"+
+		"\u0005\u0000\u0000\u0017\u0014\u0001\u0000\u0000\u0000\u0017\u0016\u0001"+
+		"\u0000\u0000\u0000\u0018!\u0001\u0000\u0000\u0000\u0019\u001a\n\u0004"+
+		"\u0000\u0000\u001a\u001b\u0005\u0003\u0000\u0000\u001b \u0003\u0004\u0002"+
+		"\u0005\u001c\u001d\n\u0003\u0000\u0000\u001d\u001e\u0005\u0004\u0000\u0000"+
+		"\u001e \u0003\u0004\u0002\u0004\u001f\u0019\u0001\u0000\u0000\u0000\u001f"+
+		"\u001c\u0001\u0000\u0000\u0000 #\u0001\u0000\u0000\u0000!\u001f\u0001"+
+		"\u0000\u0000\u0000!\"\u0001\u0000\u0000\u0000\"\u0005\u0001\u0000\u0000"+
+		"\u0000#!\u0001\u0000\u0000\u0000\u0005\b\n\u0017\u001f!";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
