@@ -22,23 +22,83 @@ public interface EdenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDecl(EdenParser.DeclContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link EdenParser#param_list}.
+	 * Visit a parse tree produced by {@link EdenParser#var_decl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitParam_list(EdenParser.Param_listContext ctx);
+	T visitVar_decl(EdenParser.Var_declContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link EdenParser#return_list}.
+	 * Visit a parse tree produced by {@link EdenParser#assign_op}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitReturn_list(EdenParser.Return_listContext ctx);
+	T visitAssign_op(EdenParser.Assign_opContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitType(EdenParser.TypeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link EdenParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitExpr(EdenParser.ExprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#or_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOr_expr(EdenParser.Or_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#and_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnd_expr(EdenParser.And_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#cmp_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCmp_expr(EdenParser.Cmp_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#add_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAdd_expr(EdenParser.Add_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#mul_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMul_expr(EdenParser.Mul_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#operand_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOperand_expr(EdenParser.Operand_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#or_op}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOr_op(EdenParser.Or_opContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#and_op}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnd_op(EdenParser.And_opContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#cmp_op}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCmp_op(EdenParser.Cmp_opContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link EdenParser#add_op}.
 	 * @param ctx the parse tree

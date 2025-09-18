@@ -1,25 +1,13 @@
-CELL_SIZE     :: 100
-GRID_WIDTH    :: 8
-GRID_HEIGHT   :: 6
-BUFFER_WIDTH  :: GRID_WIDTH*CELL_SIZE 
-BUFFER_HEIGHT :: GRID_HEIGHT*CELL_SIZE
+A :: 4+8*2
+B :: 8*2+4
+C :: 4 - 10 - 3
 
-make_vector2 :: (x: int, y: int) -> result: Vector2 {
-    result.x = x
-    reuslt.y = y
-    return result
-}
+x: int
+x = 1
+y: int = 2
+z := 3
 
-main :: () {
-    vector_x: int
-    vector_x = 4
-    vector_y := 8
-    vector2 := make_vector2(vector_x, vector_y)
-
-    vector3 := make_vector3 :: (x: int = 32, y: int = 32, z := 0) -> result: Vector2 {
-        result.x = x
-        result.y = y
-        result.z = z
-        return result 
-    }
-}
+x == x
+x != z + y
+x <= y - z * x
+x >= z * y + x
