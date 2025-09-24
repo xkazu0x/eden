@@ -5,57 +5,52 @@ import org.antlr.v4.runtime.tree.*;
 class ProgramVisitor extends EdenBaseVisitor<String> {
     StringBuilder string_builder;
     Map<String, String> var_table;
+    int tab_level;
 
     public 
     ProgramVisitor() {
         this.string_builder = new StringBuilder();
         this.var_table = new HashMap<>();
+        this.tab_level = 2;
     }
        
     public String
     generate_code(String class_name) {
         String result = String.format(
             "public class %s {\n" +
-            "   public static void main(String[] args) {\n" +
+            "    public static void main(String[] args) {\n" +
             "%s" +
-            "   }\n" +
+            "    }\n" +
             "}\n",
             class_name, 
-            indent(string_builder.toString(), 2)
+            string_builder.toString()
         );
-        return(result);
-    }
-
-    private static String
-    indent(String code, int n) {
-        String indent = "   ".repeat(n);
-        String result = Arrays.stream(code.split("\n"))
-                              .filter(line -> !line.isBlank())
-                              .map(line -> indent + line)
-                              .reduce("", (a, b) -> a + b + "\n");
         return(result);
     }
 
     @Override public String
     visitVar_decl(EdenParser.Var_declContext context) {
+        string_builder.append("    ".repeat(tab_level));
         String var_name = context.getChild(0).getText();
         String assign_op = context.getChild(1).getText();
         if (assign_op.equals(":")) {
             // TODO: check type and generate an error 
-            // if it does not exists
+            // if it does not exists.
             String type_name = context.getChild(2).getText();
-            string_builder.append(type_name).append(" ");
+            string_builder.append(type_name);
+            string_builder.append(" ");
             string_builder.append(var_name);
             if (context.getChildCount() > 4) {
                 String expr = visit(context.expr());
-                string_builder.append(" = ").append(expr);
+                string_builder.append(" = ");
+                string_builder.append(expr);
                 var_table.put(var_name, expr);
             }
             var_table.put(var_name, null);
         } else if (assign_op.equals(":=")) {
             String expr = visit(context.expr());
             // TODO: check which type will the expression 
-            // generate and declare a variable with that type
+            // generate and declare a variable with that type.
             string_builder.append("int ");
             string_builder.append(var_name);
             string_builder.append(" = ");
@@ -63,6 +58,42 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
             var_table.put(var_name, expr);
         }
         string_builder.append(";\n");
+        return(null);
+    }
+    
+    @Override public String
+    visitAssign_stmt(EdenParser.Assign_stmtContext context) {
+        String var_name = context.getChild(0).getText();
+        String expr = visit(context.expr());
+        if (var_table.containsKey(var_name)) {
+            string_builder.append("    ".repeat(tab_level));
+            string_builder.append(var_name);
+            string_builder.append(" = ");
+            string_builder.append(expr);
+            string_builder.append(";\n");
+        } else {
+            // TODO: generate error for trying to assign a value
+            // to a undeclared variable.
+        }
+        return(null);
+    }
+
+    @Override public String
+    visitIf_stmt(EdenParser.If_stmtContext context) {
+        string_builder.append("    ".repeat(tab_level));
+        String expr = visit(context.expr());
+        string_builder.append("if ");
+        string_builder.append("(" + expr + ") ");
+        string_builder.append("{\n");
+        tab_level += 1;
+        var stmt_list = context.stmt();
+        for (int stmt_index = 0;
+             stmt_index < stmt_list.size();
+             ++stmt_index) {
+            visit(context.stmt(stmt_index));
+        }
+        string_builder.append("    ".repeat(tab_level - 1) + "}\n");
+        tab_level -= 1;
         return(null);
     }
 

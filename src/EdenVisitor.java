@@ -46,12 +46,6 @@ public interface EdenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIf_stmt(EdenParser.If_stmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link EdenParser#stmt_block}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitStmt_block(EdenParser.Stmt_blockContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link EdenParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

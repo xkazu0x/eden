@@ -20,10 +20,9 @@ var_decl: NAME ':' NAME ';'          // decl
 // does _not_ return a value by itself.
 stmt: assign_stmt
     | if_stmt
-    | stmt_block;
+    ;
 assign_stmt: NAME '=' expr ';';
-if_stmt: 'if' expr stmt_block ('else' if_stmt | 'else' stmt_block)?;
-stmt_block: '{' stmt* '}';
+if_stmt: 'if' expr '{' stmt* '}';// ('else' if_stmt | 'else' '{' stmt* '}')?;
 
 // Expressions computes a value and 
 // are part of staments.

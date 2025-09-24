@@ -1,21 +1,33 @@
-// decl + explicit assignment
+////////////////////
+// NOTE: declaration
+// var_decl
 x: int;
 y: int = 8 + x;
 result := x + y * 10;
-result := y*10 + x;
 
-// decl + implicit assignment
-// a := x + y*z;
-// b := x*z + y;
-// c := (x + y)*z;
-// d := x*(z + y);
+////////////////
+// NOTE: stament
+result = 0;
+// if_stmt
+if 1 {
+}
 
-// stmt
-// if 1 {
-//     a = 123;
-//     if (a + b) {
-//         b = 123;
-//     }
-// } else {
-//     b = 321;
-// }
+if 2 {
+    x = 0;
+}
+
+if 3 {
+    x = 3;
+    if 31 {
+        x = 31;
+        if 311 {
+            x = 311;
+        }
+    }
+    if 32 {
+        x = 32;
+        if 321 {
+            x = 321;
+        }
+    }
+}
