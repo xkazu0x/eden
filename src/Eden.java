@@ -1,235 +1,114 @@
+import java.util.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-import java.util.*;
+class ProgramVisitor extends EdenBaseVisitor<String> {
+    StringBuilder string_builder;
+    Map<String, String> var_table;
 
-// abstract class Expression {
-// }
-//
-// class VariableDeclaration extends Expression {
-//     public String name;
-//     public String type;
-//     public int val;
-//     public VariableDeclaration(String name, String type, int val) {
-//         this.name = name;
-//         this.type = type;
-//         this.val = val;
-//     }
-// }
-//
-// class Multiplication extends Expression {
-//     public Expression left;
-//     public Expression right;
-//     public Multiplication(Expression left, Expression right) {
-//         this.left = left;
-//         this.right = right;
-//     }
-//     @Override public String
-//     toString() {
-//         return(left.toString() + " * " + right.toString());
-//     }
-// }
-//
-// class Addition extends Expression {
-//     public Expression left;
-//     public Expression right;
-//     public Addition(Expression left, Expression right) {
-//         this.left = left;
-//         this.right = right;
-//     }
-//     @Override public String
-//     toString() {
-//         return(left.toString() + " + " + right.toString());
-//     }
-// }
-//
-// class Variable extends Expression {
-//     public String name; 
-//     public Variable(String name) {
-//         this.name = name;
-//     }
-//     @Override public String
-//     toString() {
-//         return(name);
-//     }
-// }
-//
-// class Number extends Expression {
-//     public int val;
-//     public Number(int value) {
-//         this.val = val;
-//     }
-//     @Override public String 
-//     toString() {
-//         return(Integer.toString(val));
-//     }
-// }
-//
-// class ExpressionVisitor extends EdenBaseVisitor<Expression> {
-//     private List<String> var_name_list;
-//     private List<String> semantic_error_list;
-//
-//     public ExpressionVisitor(List<String> semantic_error_list) {
-//         this.var_name_list = new ArrayList<>();
-//         this.semantic_error_list = semantic_error_list;
-//     }
-//
-//     @Override public Expression 
-//     visitVariableDeclaration(EdenParser.VariableDeclarationContext context) { 
-//         String name = context.getChild(0).getText();
-//         if (var_name_list.contains(name)) {
-//             semantic_error_list.add("[ERROR]: variable already declared: " + name);
-//         } else {
-//             var_name_list.add(name);
-//         }
-//         String type = context.getChild(2).getText();
-//         int val = Integer.parseInt(context.getChild(4).getText());
-//         return new VariableDeclaration(name, type, val);
-//     }
-//
-//     @Override public Expression 
-//     visitMultiplication(EdenParser.MultiplicationContext context) { 
-//         Expression left = visit(context.getChild(0)); 
-//         Expression right = visit(context.getChild(2));
-//         return new Multiplication(left, right);
-//     }
-//
-//     @Override public Expression 
-//     visitAddition(EdenParser.AdditionContext context) { 
-//         Expression left = visit(context.getChild(0)); 
-//         Expression right = visit(context.getChild(2));
-//         return new Addition(left, right);
-//     }
-//
-//     @Override public Expression 
-//     visitVariable(EdenParser.VariableContext context) {
-//         String name = context.getChild(0).getText();
-//         if (!var_name_list.contains(name)) {
-//             semantic_error_list.add("[ERROR]: reference to a undeclared variable: " + name);
-//         }
-//         return new Variable(name);
-//     }
-//
-//     @Override public Expression 
-//     visitNumber(EdenParser.NumberContext context) { 
-//         String name = context.getChild(0).getText();
-//         int val = Integer.parseInt(name);
-//         return new Number(val);
-//     }
-// }
-//
-// class Program {
-//     public List<Expression> expr_list;
-//     public Program() {
-//         this.expr_list = new ArrayList<>();
-//     }
-//     public void 
-//     add_expr(Expression expr) {
-//         expr_list.add(expr);
-//     }
-// }
-//
-// class ProgramVisitor extends EdenBaseVisitor<Program> {
-//     public List<String> semantic_error_list;
-//
-//     @Override public Program 
-//     visitProgram(EdenParser.ProgramContext context) {
-//         Program prog = new Program();
-//         semantic_error_list = new ArrayList<>();
-//         ExpressionVisitor expr_visitor = new ExpressionVisitor(semantic_error_list);
-//         for (int child_index = 0; child_index < context.getChildCount(); child_index++) {
-//             if (child_index == (context.getChildCount() - 1)) {
-//                 // EOF: do nothing 
-//             } else {
-//                 ParseTree child = context.getChild(child_index);
-//                 Expression expr = expr_visitor.visit(child);
-//                 prog.add_expr(expr);
-//             }
-//         }
-//         return(prog);
-//     }
-// }
-//
-// class ExpressionProcessor {
-//     public List<Expression> expr_list;
-//     public Map<String, Integer> var_table;
-//
-//     public ExpressionProcessor(List<Expression> expr_list) {
-//         this.expr_list = expr_list;
-//         var_table = new HashMap<String, Integer>(); 
-//     }
-//
-//     public List<String> 
-//     eval_expr_list() {
-//         List<String> eval_list = new ArrayList<>();
-//         for (Expression expr: expr_list) {
-//             if (expr instanceof VariableDeclaration) {
-//                 VariableDeclaration decl = (VariableDeclaration)expr;
-//                 String name = decl.name;
-//                 int val = decl.val;
-//                 var_table.put(name, val);
-//                 eval_list.add("[INFO]: decl: " + name + " = " + Integer.toString(val));
-//             } else {
-//                 String str = expr.toString();
-//                 int result = eval_expr(expr);
-//                 eval_list.add("[INFO]: expr: " + str + " = " + result);
-//             }
-//         }
-//         return(eval_list);
-//     }
-//
-//     private int
-//     eval_expr(Expression expr) {
-//         int result = 0;
-//         if (expr instanceof Number) {
-//             Number num = (Number)expr;
-//             result = num.val;
-//         } else if (expr instanceof Variable) {
-//             Variable var = (Variable)expr;
-//             result = var_table.get(var.name);
-//         } else if (expr instanceof Addition) {
-//             Addition add = (Addition)expr;
-//             int left = eval_expr(add.left);
-//             int right = eval_expr(add.right);
-//             result = left + right;
-//         } else if (expr instanceof Multiplication) {
-//             Multiplication mul = (Multiplication)expr;
-//             int left = eval_expr(mul.left);
-//             int right = eval_expr(mul.right);
-//             result = left * right;
-//         }
-//         return(result);
-//     }
-// }
+    public 
+    ProgramVisitor() {
+        this.string_builder = new StringBuilder();
+        this.var_table = new HashMap<>();
+    }
+       
+    public String
+    generate_code(String class_name) {
+        String result = String.format(
+            "public class %s {\n" +
+            "   public static void main(String[] args) {\n" +
+            "%s" +
+            "   }\n" +
+            "}\n",
+            class_name, 
+            indent(string_builder.toString(), 2)
+        );
+        return(result);
+    }
+
+    private static String
+    indent(String code, int n) {
+        String indent = "   ".repeat(n);
+        String result = Arrays.stream(code.split("\n"))
+                              .filter(line -> !line.isBlank())
+                              .map(line -> indent + line)
+                              .reduce("", (a, b) -> a + b + "\n");
+        return(result);
+    }
+
+    @Override public String
+    visitVar_decl(EdenParser.Var_declContext context) {
+        String var_name = context.getChild(0).getText();
+        String assign_op = context.getChild(1).getText();
+        if (assign_op.equals(":")) {
+            // TODO: check type and generate an error 
+            // if it does not exists
+            String type_name = context.getChild(2).getText();
+            string_builder.append(type_name).append(" ");
+            string_builder.append(var_name);
+            if (context.getChildCount() > 4) {
+                String expr = visit(context.expr());
+                string_builder.append(" = ").append(expr);
+                var_table.put(var_name, expr);
+            }
+            var_table.put(var_name, null);
+        } else if (assign_op.equals(":=")) {
+            String expr = visit(context.expr());
+            // TODO: check which type will the expression 
+            // generate and declare a variable with that type
+            string_builder.append("int ");
+            string_builder.append(var_name);
+            string_builder.append(" = ");
+            string_builder.append(expr);
+            var_table.put(var_name, expr);
+        }
+        string_builder.append(";\n");
+        return(null);
+    }
+
+    @Override public String
+    visitExpr(EdenParser.ExprContext context) {
+        String expr = context.getText();
+        return(expr);
+    }
+}
 
 public class Eden {
     public static void 
     main(String[] args) throws Exception {
-        if (args.length != 1) {
-            System.out.println("[USAGE]: java Eden <filename>");
-            return;
+        if (args.length == 1) {
+            String filepath = args[0];
+
+            int first_letter_index = 0;
+            for (int c = 0; c < filepath.length(); ++c) {
+                if (Character.isLetter(filepath.charAt(c))) {
+                    first_letter_index = c; 
+                    break;
+                }
+            }
+
+            String filename = filepath.substring(first_letter_index, filepath.length());
+            String classname = filename.substring(0, filename.lastIndexOf("."));
+
+            CharStream char_stream = CharStreams.fromFileName(filepath);
+            EdenLexer lexer = new EdenLexer(char_stream);
+
+            CommonTokenStream token_stream = new CommonTokenStream(lexer);
+            EdenParser parser = new EdenParser(token_stream);
+            ParseTree tree = parser.prog();
+
+            ProgramVisitor program = new ProgramVisitor();
+            program.visit(tree);
+            String code = program.generate_code(classname);
+
+            System.out.printf("[INFO]: source file: %s\n", filename);
+            System.out.printf("-+-Output%s+-\n", "-".repeat(classname.length()));
+            System.out.printf(" %s.java \n", classname);
+            System.out.printf("-+-Code%s--+-\n", "-".repeat(classname.length()));
+            System.out.printf(code);
+            System.out.printf("-+-%s------+-\n", "-".repeat(classname.length()));
+        } else {
+            System.out.println("[INFO]: java Eden <filepath>");
         }
-        String filename = args[0];
-
-        CharStream char_stream = CharStreams.fromFileName(filename);
-        EdenLexer lexer = new EdenLexer(char_stream);
-
-        CommonTokenStream token_stream = new CommonTokenStream(lexer);
-        EdenParser parser = new EdenParser(token_stream);
-        ParseTree tree = parser.prog();
-
-        // ProgramVisitor prog_visitor = new ProgramVisitor();
-        // Program prog = prog_visitor.visit(tree);
-        // if (prog_visitor.semantic_error_list.isEmpty()) {
-        //     ExpressionProcessor processor = new ExpressionProcessor(prog.expr_list);
-        //     List<String> eval_list = processor.eval_expr_list();
-        //     for (String eval: eval_list) {
-        //         System.out.println(eval);
-        //     }
-        // } else {
-        //     for (String error: prog_visitor.semantic_error_list) {
-        //         System.out.println(error);
-        //     }
-        // }
     }
 }

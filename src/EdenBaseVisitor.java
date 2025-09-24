@@ -73,12 +73,12 @@ public class EdenBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements E
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAdd_op(EdenParser.Add_opContext ctx) { return visitChildren(ctx); }
+	@Override public T visitMul_op(EdenParser.Mul_opContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitMul_op(EdenParser.Mul_opContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAdd_op(EdenParser.Add_opContext ctx) { return visitChildren(ctx); }
 }

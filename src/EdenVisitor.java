@@ -58,15 +58,15 @@ public interface EdenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpr(EdenParser.ExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link EdenParser#add_op}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAdd_op(EdenParser.Add_opContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link EdenParser#mul_op}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitMul_op(EdenParser.Mul_opContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#add_op}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAdd_op(EdenParser.Add_opContext ctx);
 }

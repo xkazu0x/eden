@@ -21,12 +21,12 @@ public class EdenParser extends Parser {
 		LINE_COMMENT=18;
 	public static final int
 		RULE_prog = 0, RULE_decl = 1, RULE_var_decl = 2, RULE_stmt = 3, RULE_assign_stmt = 4, 
-		RULE_if_stmt = 5, RULE_stmt_block = 6, RULE_expr = 7, RULE_add_op = 8, 
-		RULE_mul_op = 9;
+		RULE_if_stmt = 5, RULE_stmt_block = 6, RULE_expr = 7, RULE_mul_op = 8, 
+		RULE_add_op = 9;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"prog", "decl", "var_decl", "stmt", "assign_stmt", "if_stmt", "stmt_block", 
-			"expr", "add_op", "mul_op"
+			"expr", "mul_op", "add_op"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -34,7 +34,7 @@ public class EdenParser extends Parser {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, "':'", "';'", "'='", "':='", "'if'", "'else'", "'{'", "'}'", "'('", 
-			"')'", "'+'", "'-'", "'*'", "'/'"
+			"')'", "'*'", "'/'", "'+'", "'-'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -728,29 +728,29 @@ public class EdenParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class Add_opContext extends ParserRuleContext {
-		public Add_opContext(ParserRuleContext parent, int invokingState) {
+	public static class Mul_opContext extends ParserRuleContext {
+		public Mul_opContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_add_op; }
+		@Override public int getRuleIndex() { return RULE_mul_op; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof EdenListener ) ((EdenListener)listener).enterAdd_op(this);
+			if ( listener instanceof EdenListener ) ((EdenListener)listener).enterMul_op(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof EdenListener ) ((EdenListener)listener).exitAdd_op(this);
+			if ( listener instanceof EdenListener ) ((EdenListener)listener).exitMul_op(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof EdenVisitor ) return ((EdenVisitor<? extends T>)visitor).visitAdd_op(this);
+			if ( visitor instanceof EdenVisitor ) return ((EdenVisitor<? extends T>)visitor).visitMul_op(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final Add_opContext add_op() throws RecognitionException {
-		Add_opContext _localctx = new Add_opContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_add_op);
+	public final Mul_opContext mul_op() throws RecognitionException {
+		Mul_opContext _localctx = new Mul_opContext(_ctx, getState());
+		enterRule(_localctx, 16, RULE_mul_op);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -779,29 +779,29 @@ public class EdenParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class Mul_opContext extends ParserRuleContext {
-		public Mul_opContext(ParserRuleContext parent, int invokingState) {
+	public static class Add_opContext extends ParserRuleContext {
+		public Add_opContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_mul_op; }
+		@Override public int getRuleIndex() { return RULE_add_op; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof EdenListener ) ((EdenListener)listener).enterMul_op(this);
+			if ( listener instanceof EdenListener ) ((EdenListener)listener).enterAdd_op(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof EdenListener ) ((EdenListener)listener).exitMul_op(this);
+			if ( listener instanceof EdenListener ) ((EdenListener)listener).exitAdd_op(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof EdenVisitor ) return ((EdenVisitor<? extends T>)visitor).visitMul_op(this);
+			if ( visitor instanceof EdenVisitor ) return ((EdenVisitor<? extends T>)visitor).visitAdd_op(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final Mul_opContext mul_op() throws RecognitionException {
-		Mul_opContext _localctx = new Mul_opContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_mul_op);
+	public final Add_opContext add_op() throws RecognitionException {
+		Add_opContext _localctx = new Add_opContext(_ctx, getState());
+		enterRule(_localctx, 18, RULE_add_op);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -900,8 +900,8 @@ public class EdenParser extends Parser {
 		"PQ\u0005\n\u0000\u0000QU\u0001\u0000\u0000\u0000RU\u0005\u0010\u0000\u0000"+
 		"SU\u0005\u000f\u0000\u0000TM\u0001\u0000\u0000\u0000TR\u0001\u0000\u0000"+
 		"\u0000TS\u0001\u0000\u0000\u0000U`\u0001\u0000\u0000\u0000VW\n\u0005\u0000"+
-		"\u0000WX\u0003\u0012\t\u0000XY\u0003\u000e\u0007\u0006Y_\u0001\u0000\u0000"+
-		"\u0000Z[\n\u0004\u0000\u0000[\\\u0003\u0010\b\u0000\\]\u0003\u000e\u0007"+
+		"\u0000WX\u0003\u0010\b\u0000XY\u0003\u000e\u0007\u0006Y_\u0001\u0000\u0000"+
+		"\u0000Z[\n\u0004\u0000\u0000[\\\u0003\u0012\t\u0000\\]\u0003\u000e\u0007"+
 		"\u0005]_\u0001\u0000\u0000\u0000^V\u0001\u0000\u0000\u0000^Z\u0001\u0000"+
 		"\u0000\u0000_b\u0001\u0000\u0000\u0000`^\u0001\u0000\u0000\u0000`a\u0001"+
 		"\u0000\u0000\u0000a\u000f\u0001\u0000\u0000\u0000b`\u0001\u0000\u0000"+

@@ -6,7 +6,8 @@ prog: (decl | stmt | expr)+ EOF
 // A Declaration introduces a new name 
 // in a given scope, could be a variable,
 // a function, a struct
-decl: var_decl;
+decl: var_decl
+    ;
 var_decl: NAME ':' NAME ';'          // decl
         | NAME ':' NAME '=' expr ';' // decl + explicit assignment
         | NAME ':=' expr ';'         // decl + implicit assignment

@@ -87,16 +87,6 @@ public interface EdenListener extends ParseTreeListener {
 	 */
 	void exitExpr(EdenParser.ExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link EdenParser#add_op}.
-	 * @param ctx the parse tree
-	 */
-	void enterAdd_op(EdenParser.Add_opContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link EdenParser#add_op}.
-	 * @param ctx the parse tree
-	 */
-	void exitAdd_op(EdenParser.Add_opContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link EdenParser#mul_op}.
 	 * @param ctx the parse tree
 	 */
@@ -106,4 +96,14 @@ public interface EdenListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMul_op(EdenParser.Mul_opContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EdenParser#add_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterAdd_op(EdenParser.Add_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EdenParser#add_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitAdd_op(EdenParser.Add_opContext ctx);
 }
