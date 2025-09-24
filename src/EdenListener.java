@@ -7,75 +7,103 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface EdenListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by the {@code Program}
-	 * labeled alternative in {@link EdenParser#prog}.
+	 * Enter a parse tree produced by {@link EdenParser#prog}.
 	 * @param ctx the parse tree
 	 */
-	void enterProgram(EdenParser.ProgramContext ctx);
+	void enterProg(EdenParser.ProgContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code Program}
-	 * labeled alternative in {@link EdenParser#prog}.
+	 * Exit a parse tree produced by {@link EdenParser#prog}.
 	 * @param ctx the parse tree
 	 */
-	void exitProgram(EdenParser.ProgramContext ctx);
+	void exitProg(EdenParser.ProgContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code VariableDeclaration}
-	 * labeled alternative in {@link EdenParser#decl}.
+	 * Enter a parse tree produced by {@link EdenParser#decl}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableDeclaration(EdenParser.VariableDeclarationContext ctx);
+	void enterDecl(EdenParser.DeclContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code VariableDeclaration}
-	 * labeled alternative in {@link EdenParser#decl}.
+	 * Exit a parse tree produced by {@link EdenParser#decl}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableDeclaration(EdenParser.VariableDeclarationContext ctx);
+	void exitDecl(EdenParser.DeclContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code Multiplication}
-	 * labeled alternative in {@link EdenParser#expr}.
+	 * Enter a parse tree produced by {@link EdenParser#var_decl}.
 	 * @param ctx the parse tree
 	 */
-	void enterMultiplication(EdenParser.MultiplicationContext ctx);
+	void enterVar_decl(EdenParser.Var_declContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code Multiplication}
-	 * labeled alternative in {@link EdenParser#expr}.
+	 * Exit a parse tree produced by {@link EdenParser#var_decl}.
 	 * @param ctx the parse tree
 	 */
-	void exitMultiplication(EdenParser.MultiplicationContext ctx);
+	void exitVar_decl(EdenParser.Var_declContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code Addition}
-	 * labeled alternative in {@link EdenParser#expr}.
+	 * Enter a parse tree produced by {@link EdenParser#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterAddition(EdenParser.AdditionContext ctx);
+	void enterStmt(EdenParser.StmtContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code Addition}
-	 * labeled alternative in {@link EdenParser#expr}.
+	 * Exit a parse tree produced by {@link EdenParser#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitAddition(EdenParser.AdditionContext ctx);
+	void exitStmt(EdenParser.StmtContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code Variable}
-	 * labeled alternative in {@link EdenParser#expr}.
+	 * Enter a parse tree produced by {@link EdenParser#assign_stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariable(EdenParser.VariableContext ctx);
+	void enterAssign_stmt(EdenParser.Assign_stmtContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code Variable}
-	 * labeled alternative in {@link EdenParser#expr}.
+	 * Exit a parse tree produced by {@link EdenParser#assign_stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariable(EdenParser.VariableContext ctx);
+	void exitAssign_stmt(EdenParser.Assign_stmtContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code Number}
-	 * labeled alternative in {@link EdenParser#expr}.
+	 * Enter a parse tree produced by {@link EdenParser#if_stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterNumber(EdenParser.NumberContext ctx);
+	void enterIf_stmt(EdenParser.If_stmtContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code Number}
-	 * labeled alternative in {@link EdenParser#expr}.
+	 * Exit a parse tree produced by {@link EdenParser#if_stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitNumber(EdenParser.NumberContext ctx);
+	void exitIf_stmt(EdenParser.If_stmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EdenParser#stmt_block}.
+	 * @param ctx the parse tree
+	 */
+	void enterStmt_block(EdenParser.Stmt_blockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EdenParser#stmt_block}.
+	 * @param ctx the parse tree
+	 */
+	void exitStmt_block(EdenParser.Stmt_blockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EdenParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr(EdenParser.ExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EdenParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr(EdenParser.ExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EdenParser#add_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterAdd_op(EdenParser.Add_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EdenParser#add_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitAdd_op(EdenParser.Add_opContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EdenParser#mul_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterMul_op(EdenParser.Mul_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EdenParser#mul_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitMul_op(EdenParser.Mul_opContext ctx);
 }

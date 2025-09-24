@@ -1,3 +1,20 @@
-x: int = 4
-y: int = 8
-3 + 4 + 8
+// decl + explicit assignment
+x: int = 4;
+y: int = 8;
+z: int = 2;
+
+// decl + implicit assignment
+a := x + y*z;
+b := x*z + y;
+c := (x + y)*z;
+d := x*(z + y);
+
+// stmt
+if 1 {
+    a = 123;
+    if (a + b) {
+        b = 123;
+    }
+} else {
+    b = 321;
+}

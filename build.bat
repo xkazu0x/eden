@@ -15,6 +15,7 @@ set grun=java -cp %antlr_lib%;%CLASSPATH% org.antlr.v4.gui.TestRig
 set compile=javac -sourcepath src -d build
 set execute=java
 
+if "%clean%"=="1" rmdir /s /q build
 if not exist build mkdir build
 
 %antlr4% -o src -visitor Eden.g4
@@ -29,6 +30,6 @@ if "%test%"=="1" (
 
 if "%run%"=="1" (
     cd build
-    %execute% Main
+    %execute% Eden ../example.eden
     cd ..
 )
