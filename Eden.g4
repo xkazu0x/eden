@@ -15,7 +15,7 @@ var_decl: NAME ':' NAME ';'          // decl
         | NAME ':=' expr ';'         // decl + implicit assignment
         ;
 struct_decl: NAME '::' 'struct' '{' var_decl* '}' ';';
-func_decl: NAME '::' '(' param_list? ')' return_list? '{' (var_decl | stmt)* '}';
+func_decl: NAME '::' '(' param_list? ')' return_list? stmt_block;
 param_list: NAME ':' NAME (',' param_list)*;
 return_list: '->' NAME;
 
@@ -24,19 +24,22 @@ return_list: '->' NAME;
 // tells the program to do something. 
 // It can contain expression, but it
 // does _not_ return a value by itself.
-stmt: assign_stmt
+stmt: var_decl
+    | assign_stmt
     | return_stmt
     | if_stmt
     ;
 assign_stmt: NAME ('.' NAME)? '=' expr ';';
 return_stmt: 'return' expr? ';';
-if_stmt: 'if' expr '{' (var_decl | stmt)* '}';// ('else' if_stmt | 'else' '{' stmt* '}')?;
+if_stmt: 'if' expr stmt_block;// ('else' if_stmt | 'else' '{' stmt* '}')?;
+stmt_block: '{' stmt* '}';
 
 // Expressions computes a value and 
 // are part of staments.
 expr: expr mul_op expr
     | expr add_op expr
     | '(' expr ')'
+    | NAME'(' expr (',' expr)* ')'
     | NAME 
     | INT
     ;

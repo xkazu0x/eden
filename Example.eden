@@ -15,9 +15,10 @@ main :: () {
     x = 4;
     y: int = 8 + x;
     result := x + y*10;
-    if result {
-        // vec0 := make_vector2(10, 20);
-        // vec1 := make_vector2(20, 30);
+    make := true;
+    if make {
+        vec0 := make_vector2(10, 20);
+        vec1 := make_vector2(20, 30);
     }
 }
 

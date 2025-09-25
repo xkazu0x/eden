@@ -1,28 +1,31 @@
-import java.io.*;
-import java.util.*;
-import java.nio.file.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-class ProgramVisitor extends EdenBaseVisitor<String> {
-    public static final int STRING_BUILDER_DEFAULT = 0;
-    public static final int STRING_BUILDER_STRUCT  = 1;
-    public static final int STRING_BUILDER_MAX     = 2;
+import java.util.*;
+import java.io.*;
+import java.nio.file.*;
 
-    StringBuilder builder_buf[]   = new StringBuilder[STRING_BUILDER_MAX];
+class Builder {
+    public static final int DEFAULT = 0;
+    public static final int STRUCT  = 1;
+    public static final int MAX     = 2;
+}
+
+class ProgramVisitor extends EdenBaseVisitor<String> {
+    StringBuilder builder_buf[]   = new StringBuilder[Builder.MAX];
     List<String> struct_list      = new ArrayList<>();
     Map<String, String> var_table = new HashMap<>();
 
-    int current_builder = STRING_BUILDER_DEFAULT;
+    int current_builder = Builder.DEFAULT;
     int indent_level    = 1;
 
     public 
     ProgramVisitor() {
-        for (int i = 0; i < STRING_BUILDER_MAX; ++i) {
+        for (int i = 0; i < Builder.MAX; ++i) {
             builder_buf[i] = new StringBuilder();
         }
     }
-       
+
     public String
     generate_code(String class_name) {
         String result = String.format(
@@ -30,13 +33,13 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
             "public class %s {\n" +
             "%s" +
             "}\n",
-            builder_buf[STRING_BUILDER_STRUCT].toString(),
+            builder_buf[Builder.STRUCT].toString(),
             class_name, 
-            builder_buf[STRING_BUILDER_DEFAULT].toString()
+            builder_buf[Builder.DEFAULT].toString()
         );
         return(result);
     }
-    
+
     ////////////////////
     // NOTE: Declaration
     @Override public String
@@ -71,10 +74,10 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
         builder_buf[current_builder].append(";\n");
         return(null);
     }
-    
+
     @Override public String
     visitStruct_decl(EdenParser.Struct_declContext context) {
-        current_builder = STRING_BUILDER_STRUCT;
+        current_builder = Builder.STRUCT;
         {
             String struct_name = context.getChild(0).getText();
             builder_buf[current_builder].append("class ");
@@ -89,7 +92,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
             builder_buf[current_builder].append("}\n");
             struct_list.add(struct_name);
         }
-        current_builder = STRING_BUILDER_DEFAULT;
+        current_builder = Builder.DEFAULT;
         return(null);
     }
 
@@ -118,21 +121,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
         builder_buf[current_builder].append(") ");
         builder_buf[current_builder].append("{\n");
         indent_level += 1;
-        // TODO: change this to visitBlock()
-        // {
-        var var_decl_list = context.var_decl();
-        for (int var_decl_index = 0;
-             var_decl_index < var_decl_list.size();
-             ++var_decl_index) {
-            visit(context.var_decl(var_decl_index));
-        }
-        var stmt_list = context.stmt();
-        for (int stmt_index = 0;
-             stmt_index < stmt_list.size();
-             ++stmt_index) {
-            visit(context.stmt(stmt_index));
-        }
-        // }
+        visit(context.stmt_block());
         indent_level -= 1;
         builder_buf[current_builder].append("    ".repeat(indent_level));
         builder_buf[current_builder].append("}\n");
@@ -165,7 +154,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
         builder_buf[current_builder].append(type_name);
         return(null);
     }
-    
+
     //////////////////
     // NOTE: Statement
     @Override public String
@@ -184,7 +173,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
         builder_buf[current_builder].append(";\n");
         return(null);
     }
-    
+
     @Override public String
     visitReturn_stmt(EdenParser.Return_stmtContext context) {
         builder_buf[current_builder].append("    ".repeat(indent_level));
@@ -206,27 +195,24 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
         builder_buf[current_builder].append("(" + expr + ") ");
         builder_buf[current_builder].append("{\n");
         indent_level += 1;
-        // TODO: change this to visitBlock()
-        // {
-        var var_decl_list = context.var_decl();
-        for (int var_decl_index = 0;
-             var_decl_index < var_decl_list.size();
-             ++var_decl_index) {
-            visit(context.var_decl(var_decl_index));
-        }
+        visit(context.stmt_block());
+        indent_level -= 1;
+        builder_buf[current_builder].append("    ".repeat(indent_level));
+        builder_buf[current_builder].append("}\n");
+        return(null);
+    }
+
+    @Override public String
+    visitStmt_block(EdenParser.Stmt_blockContext context) {
         var stmt_list = context.stmt();
         for (int stmt_index = 0;
              stmt_index < stmt_list.size();
              ++stmt_index) {
             visit(context.stmt(stmt_index));
         }
-        // }
-        indent_level -= 1;
-        builder_buf[current_builder].append("    ".repeat(indent_level));
-        builder_buf[current_builder].append("}\n");
         return(null);
     }
-    
+
     ///////////////////
     // NOTE: Expression
     @Override public String
@@ -241,60 +227,70 @@ public class Eden {
     main(String[] args) throws Exception {
         if (args.length >= 1) {
             String output = "";
+            String filepath = null;
             for (int arg_index = 0;
                  arg_index < args.length;
                  ++arg_index) {
                 String arg = args[arg_index];
                 if (arg.contains("-o")) {
-                    output = args[arg_index + 1] + "/";
+                    String next_arg = args[arg_index + 1];
+                    output = next_arg;
+                    char last_char = next_arg.charAt(next_arg.length() - 1);
+                    if (last_char != '/') {
+                        output += "/";
+                    }
+                    continue;
+                }
+                if (arg.contains(".eden")) {
+                    filepath = arg;
                 }
             }
-            String filepath = args[0];
-            
-            int past_last_slash = filepath.lastIndexOf("/") + 1;
-            String filename = filepath.substring(past_last_slash, filepath.length());
-            String classname = filename.substring(0, filename.lastIndexOf("."));
-            output += classname + ".java";
+            if (filepath != null) {
+                int past_last_slash = filepath.lastIndexOf("/") + 1;
+                String filename = filepath.substring(past_last_slash, filepath.length());
+                String classname = filename.substring(0, filename.lastIndexOf("."));
+                output += classname + ".java";
 
-            CharStream char_stream = CharStreams.fromFileName(filepath);
-            EdenLexer lexer = new EdenLexer(char_stream);
+                CharStream char_stream = CharStreams.fromFileName(filepath);
+                EdenLexer lexer = new EdenLexer(char_stream);
 
-            CommonTokenStream token_stream = new CommonTokenStream(lexer);
-            EdenParser parser = new EdenParser(token_stream);
-            ParseTree tree = parser.prog();
+                CommonTokenStream token_stream = new CommonTokenStream(lexer);
+                EdenParser parser = new EdenParser(token_stream);
+                ParseTree tree = parser.prog();
 
-            ProgramVisitor program = new ProgramVisitor();
-            program.visit(tree);
-            String code = program.generate_code(classname);
+                ProgramVisitor program = new ProgramVisitor();
+                program.visit(tree);
+                String code = program.generate_code(classname);
 
-            try {
-                Files.write(Paths.get(output), 
-                            code.getBytes(),
-                            StandardOpenOption.CREATE,
-                            StandardOpenOption.TRUNCATE_EXISTING,
-                            StandardOpenOption.WRITE);
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    Files.write(Paths.get(output), 
+                        code.getBytes(),
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING,
+                        StandardOpenOption.WRITE);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.printf("[INFO]: file: %s\n", filename);
+                System.out.printf("[INFO]: path: %s\n", filepath);
+                System.out.printf("[INFO]:  out: %s\n", output);
+                System.out.printf("-+-File%s+-\n", "-".repeat(classname.length()));
+                System.out.printf("  %s.java \n", classname);
+                System.out.printf("-+-Code%s+-\n", "-".repeat(classname.length()));
+                System.out.printf(code);
+                System.out.printf("-+-%s----+-\n", "-".repeat(classname.length()));
+            } else {
+                System.out.printf("[ERROR]: Failed to locate the input file from path: %s\n", filepath);
             }
-
-            System.out.printf("[INFO]: file: %s\n", filename);
-            System.out.printf("[INFO]: path: %s\n", filepath);
-            System.out.printf("[INFO]:  out: %s\n", output);
-            System.out.printf("-+-File%s+-\n", "-".repeat(classname.length()));
-            System.out.printf("  %s.java \n", classname);
-            System.out.printf("-+-Code%s+-\n", "-".repeat(classname.length()));
-            System.out.printf(code);
-            System.out.printf("-+-%s----+-\n", "-".repeat(classname.length()));
         } else {
-            System.out.println("[INFO]: java Eden <filepath>");
+            System.out.printf("[INFO]: Usage: java Eden <options> <filepath>\n");
         }
     }
 }
 
 // TODO: 
+// - for, while loops. break. continue.
 // - better if with else and else if.
 // - elaborate on the visit expression function.
-// - maybe add a stmt_block so you can easily copy the block contents to staments
-// and declarations.
-// - for, while loops. break. continue.
-// - function calls
+// - initialize strucs with {}, { 10, 20 } and { .x = 10, .y =20 }

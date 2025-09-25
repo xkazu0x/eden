@@ -117,6 +117,16 @@ public interface EdenListener extends ParseTreeListener {
 	 */
 	void exitIf_stmt(EdenParser.If_stmtContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link EdenParser#stmt_block}.
+	 * @param ctx the parse tree
+	 */
+	void enterStmt_block(EdenParser.Stmt_blockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EdenParser#stmt_block}.
+	 * @param ctx the parse tree
+	 */
+	void exitStmt_block(EdenParser.Stmt_blockContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link EdenParser#expr}.
 	 * @param ctx the parse tree
 	 */

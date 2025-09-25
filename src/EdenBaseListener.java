@@ -148,6 +148,18 @@ public class EdenBaseListener implements EdenListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterStmt_block(EdenParser.Stmt_blockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStmt_block(EdenParser.Stmt_blockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExpr(EdenParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
