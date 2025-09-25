@@ -1,13 +1,32 @@
 ////////////////////
 // NOTE: declaration
+
 // var_decl
 x: int;
 y: int = 8 + x;
 result := x + y * 10;
 
+// struct_decl
+Vector2 :: struct {
+    x: int;
+    y: int;
+};
+
+// func_decl
+make_vector2 :: (x: int, y: int) -> Vector2 {
+    result: Vector2;
+    result.x = x;
+    result.y = y;
+    return result;
+}
+
+make :: () {
+}
+
 ////////////////
 // NOTE: stament
 result = 0;
+
 // if_stmt
 if 1 {
 }

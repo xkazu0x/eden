@@ -28,6 +28,30 @@ public interface EdenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVar_decl(EdenParser.Var_declContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link EdenParser#struct_decl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStruct_decl(EdenParser.Struct_declContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#func_decl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunc_decl(EdenParser.Func_declContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#param_list}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParam_list(EdenParser.Param_listContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#return_list}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturn_list(EdenParser.Return_listContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link EdenParser#stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -39,6 +63,12 @@ public interface EdenVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAssign_stmt(EdenParser.Assign_stmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link EdenParser#return_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturn_stmt(EdenParser.Return_stmtContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link EdenParser#if_stmt}.
 	 * @param ctx the parse tree
