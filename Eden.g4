@@ -10,14 +10,11 @@ decl: var_decl
     | struct_decl
     | func_decl
     ;
-
 var_decl: NAME ':' NAME ';'          // decl
         | NAME ':' NAME '=' expr ';' // decl + explicit assignment
         | NAME ':=' expr ';'         // decl + implicit assignment
         ;
-
 struct_decl: NAME '::' 'struct' '{' var_decl* '}' ';';
-
 func_decl: NAME '::' '(' param_list? ')' return_list? '{' (var_decl | stmt)* '}';
 param_list: NAME ':' NAME (',' param_list)*;
 return_list: '->' NAME;
@@ -32,7 +29,7 @@ stmt: assign_stmt
     | if_stmt
     ;
 assign_stmt: NAME ('.' NAME)? '=' expr ';';
-return_stmt: 'return' expr ';';
+return_stmt: 'return' expr? ';';
 if_stmt: 'if' expr '{' (var_decl | stmt)* '}';// ('else' if_stmt | 'else' '{' stmt* '}')?;
 
 // Expressions computes a value and 

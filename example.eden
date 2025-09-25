@@ -1,18 +1,8 @@
-////////////////////
-// NOTE: declaration
-
-// var_decl
-x: int;
-y: int = 8 + x;
-result := x + y * 10;
-
-// struct_decl
 Vector2 :: struct {
     x: int;
     y: int;
 };
 
-// func_decl
 make_vector2 :: (x: int, y: int) -> Vector2 {
     result: Vector2;
     result.x = x;
@@ -20,33 +10,34 @@ make_vector2 :: (x: int, y: int) -> Vector2 {
     return result;
 }
 
-make :: () {
-}
-
-////////////////
-// NOTE: stament
-result = 0;
-
-// if_stmt
-if 1 {
-}
-
-if 2 {
-    x = 0;
-}
-
-if 3 {
-    x = 3;
-    if 31 {
-        x = 31;
-        if 311 {
-            x = 311;
-        }
+main :: () {
+    x: int;
+    y: int = 8 + x;
+    result := x + y * 10;
+    if result {
+        result = 0;
     }
-    if 32 {
-        x = 32;
-        if 321 {
-            x = 321;
-        }
-    }
+    // vec0 := make_vector2(10, 20);
+    // vec1 := make_vector2(20, 30);
 }
+
+// if 1 {
+// }
+// if 2 {
+//     x = 0;
+// }
+// if 3 {
+//     x = 3;
+//     if 31 {
+//         x = 31;
+//         if 311 {
+//             x = 311;
+//         }
+//     }
+//     if 32 {
+//         x = 32;
+//         if 321 {
+//             x = 321;
+//         }
+//     }
+// }
