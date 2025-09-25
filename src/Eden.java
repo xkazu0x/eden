@@ -1,4 +1,6 @@
+import java.io.*;
 import java.util.*;
+import java.nio.file.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
@@ -237,19 +239,22 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
 public class Eden {
     public static void 
     main(String[] args) throws Exception {
-        if (args.length == 1) {
-            String filepath = args[0];
-
-            int first_letter_index = 0;
-            for (int c = 0; c < filepath.length(); ++c) {
-                if (Character.isLetter(filepath.charAt(c))) {
-                    first_letter_index = c; 
-                    break;
+        if (args.length >= 1) {
+            String output = "";
+            for (int arg_index = 0;
+                 arg_index < args.length;
+                 ++arg_index) {
+                String arg = args[arg_index];
+                if (arg.contains("-o")) {
+                    output = args[arg_index + 1] + "/";
                 }
             }
-
-            String filename = filepath.substring(first_letter_index, filepath.length());
+            String filepath = args[0];
+            
+            int past_last_slash = filepath.lastIndexOf("/") + 1;
+            String filename = filepath.substring(past_last_slash, filepath.length());
             String classname = filename.substring(0, filename.lastIndexOf("."));
+            output += classname + ".java";
 
             CharStream char_stream = CharStreams.fromFileName(filepath);
             EdenLexer lexer = new EdenLexer(char_stream);
@@ -262,12 +267,24 @@ public class Eden {
             program.visit(tree);
             String code = program.generate_code(classname);
 
-            System.out.printf("[INFO]: source file: %s\n", filename);
-            System.out.printf("-+-Output%s+-\n", "-".repeat(classname.length()));
-            System.out.printf(" %s.java \n", classname);
-            System.out.printf("-+-Code%s--+-\n", "-".repeat(classname.length()));
+            try {
+                Files.write(Paths.get(output), 
+                            code.getBytes(),
+                            StandardOpenOption.CREATE,
+                            StandardOpenOption.TRUNCATE_EXISTING,
+                            StandardOpenOption.WRITE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.out.printf("[INFO]: file: %s\n", filename);
+            System.out.printf("[INFO]: path: %s\n", filepath);
+            System.out.printf("[INFO]:  out: %s\n", output);
+            System.out.printf("-+-File%s+-\n", "-".repeat(classname.length()));
+            System.out.printf("  %s.java \n", classname);
+            System.out.printf("-+-Code%s+-\n", "-".repeat(classname.length()));
             System.out.printf(code);
-            System.out.printf("-+-%s------+-\n", "-".repeat(classname.length()));
+            System.out.printf("-+-%s----+-\n", "-".repeat(classname.length()));
         } else {
             System.out.println("[INFO]: java Eden <filepath>");
         }

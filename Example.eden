@@ -12,13 +12,13 @@ make_vector2 :: (x: int, y: int) -> Vector2 {
 
 main :: () {
     x: int;
+    x = 4;
     y: int = 8 + x;
-    result := x + y * 10;
+    result := x + y*10;
     if result {
-        result = 0;
+        // vec0 := make_vector2(10, 20);
+        // vec1 := make_vector2(20, 30);
     }
-    // vec0 := make_vector2(10, 20);
-    // vec1 := make_vector2(20, 30);
 }
 
 // if 1 {

@@ -15,8 +15,13 @@ grun="java -cp $antlr_lib:$CLASSPATH org.antlr.v4.gui.TestRig"
 compile="javac -sourcepath src -d build"
 execute="java"
 
-if [ -v clean ]; then rm -rf build; fi
+if [ -v clean ]; then
+    rm -rf build; 
+    rm -rf local;
+fi
+
 mkdir -p build
+mkdir -p local
 
 $antlr4 -o src -visitor Eden.g4
 $compile src/*.java
@@ -24,12 +29,12 @@ $compile src/*.java
 if [ -v test ]; then
     cp Eden.g4 build/Eden.g4
     cd build
-    $grun Eden prog -gui ../example.eden
+    $grun Eden prog -gui ../Example.eden
     cd ..
 fi
 
 if [ -v run ]; then
     cd build
-    $execute Eden ../example.eden
+    $execute Eden ../Example.eden -o ../local
     cd ..
 fi

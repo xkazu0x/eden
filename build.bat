@@ -24,12 +24,12 @@ if not exist build mkdir build
 if "%test%"=="1" (
     copy Eden.g4 build/Eden.g4
     cd build
-    %grun% Eden prog -gui ..\example.eden
+    %grun% Eden prog -gui ..\Example.eden
     cd ..
 )
 
 if "%run%"=="1" (
     cd build
-    %execute% Eden ../example.eden
+    %execute% Eden ../Example.eden -o ../local
     cd ..
 )
