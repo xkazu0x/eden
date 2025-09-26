@@ -12,9 +12,10 @@ class Builder {
 }
 
 class ProgramVisitor extends EdenBaseVisitor<String> {
-    StringBuilder builder_buf[]   = new StringBuilder[Builder.MAX];
-    List<String> struct_list      = new ArrayList<>();
-    Map<String, String> var_table = new HashMap<>();
+    StringBuilder builder_buf[]    = new StringBuilder[Builder.MAX];
+    Map<String, String> type_table = new HashMap<>();
+    Map<String, String> var_table  = new HashMap<>();
+    List<String> struct_list       = new ArrayList<>();
 
     int current_builder = Builder.DEFAULT;
     int indent_level    = 1;
@@ -24,6 +25,17 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
         for (int i = 0; i < Builder.MAX; ++i) {
             builder_buf[i] = new StringBuilder();
         }
+        // NOTE: Fill type table
+        type_table.put("u16",    "char");
+        type_table.put("s32",    "int");
+        type_table.put("f32",    "float");
+        type_table.put("f64",    "double");
+
+        type_table.put("char",   "char");
+        type_table.put("int",    "int");
+        type_table.put("float",  "float");
+        type_table.put("double", "double");
+        type_table.put("string", "String");
     }
 
     public String
@@ -49,7 +61,11 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
         builder_buf[current_builder].append("    ".repeat(indent_level));
         if (assign_op.equals(":")) {
             String type_name = context.getChild(2).getText();
-            builder_buf[current_builder].append(type_name);
+            if (type_table.containsKey(type_name)) {
+                builder_buf[current_builder].append(type_table.get(type_name));
+            } else {
+                builder_buf[current_builder].append(type_name);
+            }
             builder_buf[current_builder].append(" ");
             builder_buf[current_builder].append(var_name);
             if (struct_list.contains(type_name)) {
@@ -173,6 +189,14 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
         builder_buf[current_builder].append(";\n");
         return(null);
     }
+    
+    @Override public String
+    visitFunc_call_stmt(EdenParser.Func_call_stmtContext context) {
+        builder_buf[current_builder].append("    ".repeat(indent_level));
+        visit(context.func_call_expr());
+        builder_buf[current_builder].append(";\n");
+        return(null);
+    }
 
     @Override public String
     visitReturn_stmt(EdenParser.Return_stmtContext context) {
@@ -219,6 +243,25 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     visitExpr(EdenParser.ExprContext context) {
         String expr = context.getText();
         return(expr);
+    }
+    
+    @Override public String
+    visitFunc_call_expr(EdenParser.Func_call_exprContext context) {
+        String func_name = context.getChild(0).getText();
+        builder_buf[current_builder].append(func_name);
+        builder_buf[current_builder].append("(");
+        var expr_list = context.expr();
+        for (int expr_index = 0;
+             expr_index < expr_list.size();
+             ++expr_index) {
+            String expr = visit(context.expr(expr_index));
+            builder_buf[current_builder].append(expr);
+            if (expr_index != expr_list.size() - 1) {
+                builder_buf[current_builder].append(", ");
+            }
+        }
+        builder_buf[current_builder].append(")");
+        return(null);
     }
 }
 

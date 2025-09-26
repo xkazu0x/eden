@@ -124,6 +124,18 @@ public class EdenBaseListener implements EdenListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFunc_call_stmt(EdenParser.Func_call_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunc_call_stmt(EdenParser.Func_call_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterReturn_stmt(EdenParser.Return_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -167,6 +179,18 @@ public class EdenBaseListener implements EdenListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpr(EdenParser.ExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunc_call_expr(EdenParser.Func_call_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunc_call_expr(EdenParser.Func_call_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -26,10 +26,12 @@ return_list: '->' NAME;
 // does _not_ return a value by itself.
 stmt: var_decl
     | assign_stmt
+    | func_call_stmt
     | return_stmt
     | if_stmt
     ;
 assign_stmt: NAME ('.' NAME)? '=' expr ';';
+func_call_stmt: func_call_expr ';';
 return_stmt: 'return' expr? ';';
 if_stmt: 'if' expr stmt_block;// ('else' if_stmt | 'else' '{' stmt* '}')?;
 stmt_block: '{' stmt* '}';
@@ -39,14 +41,23 @@ stmt_block: '{' stmt* '}';
 expr: expr mul_op expr
     | expr add_op expr
     | '(' expr ')'
-    | NAME'(' expr (',' expr)* ')'
+    | func_call_expr
     | NAME 
+    | CHAR
+    | STRING
+    | DOUBLE
+    | FLOAT
     | INT
     ;
+func_call_expr: NAME'(' expr (',' expr)* ')';
 mul_op: '*' | '/';
 add_op: '+' | '-';
 
 INT: '0' | [1-9] [0-9]*;
+FLOAT: [0-9]+ '.' [0-9]+ 'f';
+DOUBLE: [0-9]+ '.' [0-9]+;
+STRING: '"' ~'"'* '"';
+CHAR: '\'' ~'\''* '\'';
 NAME: [_a-zA-Z] [_a-zA-Z0-9]*;
 WHITESPACE: [ \r\n\t]+ -> skip;
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
