@@ -25,7 +25,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
         for (int i = 0; i < Builder.MAX; ++i) {
             builder_buf[i] = new StringBuilder();
         }
-        // NOTE: Fill type table
+
         type_table.put("u16",    "char");
         type_table.put("s32",    "int");
         type_table.put("f32",    "float");
@@ -39,7 +39,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     }
 
     public String
-    generate_code(String class_name) {
+    get_code_str(String class_name) {
         String result = String.format(
             "%s" +
             "public class %s {\n" +
@@ -265,75 +265,65 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     }
 }
 
-public class Eden {
-    public static void 
-    main(String[] args) throws Exception {
-        if (args.length >= 1) {
-            String output = "";
-            String filepath = null;
-            for (int arg_index = 0;
-                 arg_index < args.length;
-                 ++arg_index) {
-                String arg = args[arg_index];
-                if (arg.contains("-o")) {
-                    String next_arg = args[arg_index + 1];
-                    output = next_arg;
-                    char last_char = next_arg.charAt(next_arg.length() - 1);
-                    if (last_char != '/') {
-                        output += "/";
-                    }
-                    continue;
-                }
-                if (arg.contains(".eden")) {
-                    filepath = arg;
-                }
-            }
-            if (filepath != null) {
-                int past_last_slash = filepath.lastIndexOf("/") + 1;
-                String filename = filepath.substring(past_last_slash, filepath.length());
-                String classname = filename.substring(0, filename.lastIndexOf("."));
-                output += classname + ".java";
-
-                CharStream char_stream = CharStreams.fromFileName(filepath);
-                EdenLexer lexer = new EdenLexer(char_stream);
-
-                CommonTokenStream token_stream = new CommonTokenStream(lexer);
-                EdenParser parser = new EdenParser(token_stream);
-                ParseTree tree = parser.prog();
-
-                ProgramVisitor program = new ProgramVisitor();
-                program.visit(tree);
-                String code = program.generate_code(classname);
-
-                try {
-                    Files.write(Paths.get(output), 
-                        code.getBytes(),
-                        StandardOpenOption.CREATE,
-                        StandardOpenOption.TRUNCATE_EXISTING,
-                        StandardOpenOption.WRITE);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                System.out.printf("[INFO]: file: %s\n", filename);
-                System.out.printf("[INFO]: path: %s\n", filepath);
-                System.out.printf("[INFO]:  out: %s\n", output);
-                System.out.printf("-+-File%s+-\n", "-".repeat(classname.length()));
-                System.out.printf("  %s.java \n", classname);
-                System.out.printf("-+-Code%s+-\n", "-".repeat(classname.length()));
-                System.out.printf(code);
-                System.out.printf("-+-%s----+-\n", "-".repeat(classname.length()));
-            } else {
-                System.out.printf("[ERROR]: Failed to locate the input file from path: %s\n", filepath);
-            }
-        } else {
-            System.out.printf("[INFO]: Usage: java Eden <options> <filepath>\n");
-        }
+public class EdenCompiler {
+  private static EdenLexer
+  eden_create_lexer(String file_path) {
+    EdenLexer result = null;
+    try {
+      CharStream char_stream = CharStreams.fromFileName(file_path);
+      result = new EdenLexer(char_stream);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-}
+    return(result);
+  }
 
-// TODO: 
-// - for, while loops. break. continue.
-// - better if with else and else if.
-// - elaborate on the visit expression function.
-// - initialize strucs with {}, { 10, 20 } and { .x = 10, .y =20 }
+  private static EdenParser
+  eden_create_parser(EdenLexer lexer) {
+    CommonTokenStream token_stream = new CommonTokenStream(lexer);
+    EdenParser result = new EdenParser(token_stream);
+    return(result);
+  }
+
+  private static void
+  write_file(String path, String data) {
+    try {
+      Files.write(
+        Paths.get(path), 
+        data.getBytes(),
+        StandardOpenOption.CREATE,
+        StandardOpenOption.TRUNCATE_EXISTING,
+        StandardOpenOption.WRITE
+      );
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void 
+  main(String[] args) throws Exception {
+    CmdLineParser cmd_parser = new CmdLineParser(args);
+    if (cmd_parser.parse()) {
+      String src_file_path = cmd_parser.get_src_file_path();
+      String dst_file_path = cmd_parser.get_dst_file_path();
+      String class_name = cmd_parser.get_class_name();
+
+      EdenLexer lexer = eden_create_lexer(src_file_path);
+      EdenParser parser = eden_create_parser(lexer);
+
+      ProgramVisitor program = new ProgramVisitor();
+      program.visit(parser.prog());
+
+      String code_str = program.get_code_str(class_name);
+      write_file(dst_file_path, code_str);
+
+      System.out.printf("[INFO]: src: %s\n", src_file_path);
+      System.out.printf("[INFO]: dst: %s\n", dst_file_path);
+      System.out.printf("-+-File%s+-\n", "-".repeat(class_name.length()));
+      System.out.printf("  %s.java \n", class_name);
+      System.out.printf("-+-Code%s+-\n", "-".repeat(class_name.length()));
+      System.out.printf(code_str);
+      System.out.printf("-+-%s----+-\n", "-".repeat(class_name.length()));
+    }
+  }
+}
