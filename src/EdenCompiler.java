@@ -11,258 +11,362 @@ class Builder {
     public static final int MAX     = 2;
 }
 
+// class ProgramVisitor extends EdenBaseVisitor<String> {
+//     StringBuilder builder_buf[]    = new StringBuilder[Builder.MAX];
+//     Map<String, String> type_table = new HashMap<>();
+//     Map<String, String> var_table  = new HashMap<>();
+//     List<String> struct_list       = new ArrayList<>();
+//
+//     int current_builder = Builder.DEFAULT;
+//     int indent_level    = 1;
+//
+//     public 
+//     ProgramVisitor() {
+//         for (int i = 0; i < Builder.MAX; ++i) {
+//             builder_buf[i] = new StringBuilder();
+//         }
+//
+//         type_table.put("u16",    "char");
+//         type_table.put("s32",    "int");
+//         type_table.put("f32",    "float");
+//         type_table.put("f64",    "double");
+//
+//         type_table.put("char",   "char");
+//         type_table.put("int",    "int");
+//         type_table.put("float",  "float");
+//         type_table.put("double", "double");
+//         type_table.put("string", "String");
+//     }
+//
+//     public String
+//     get_code_str(String class_name) {
+//         String result = String.format(
+//             "%s" +
+//             "public class %s {\n" +
+//             "%s" +
+//             "}\n",
+//             builder_buf[Builder.STRUCT].toString(),
+//             class_name, 
+//             builder_buf[Builder.DEFAULT].toString()
+//         );
+//         return(result);
+//     }
+//
+//     ////////////////////
+//     // NOTE: Declaration
+//     @Override public String
+//     visitVar_decl(EdenParser.Var_declContext context) {
+//         String var_name = context.getChild(0).getText();
+//         String assign_op = context.getChild(1).getText();
+//         builder_buf[current_builder].append("    ".repeat(indent_level));
+//         if (assign_op.equals(":")) {
+//             String type_name = context.getChild(2).getText();
+//             if (type_table.containsKey(type_name)) {
+//                 builder_buf[current_builder].append(type_table.get(type_name));
+//             } else {
+//                 builder_buf[current_builder].append(type_name);
+//             }
+//             builder_buf[current_builder].append(" ");
+//             builder_buf[current_builder].append(var_name);
+//             if (struct_list.contains(type_name)) {
+//                 builder_buf[current_builder].append(" = ");
+//                 builder_buf[current_builder].append("new " + type_name + "()");
+//             } else if (context.getChildCount() > 4) {
+//                 String expr = visit(context.expr());
+//                 builder_buf[current_builder].append(" = ");
+//                 builder_buf[current_builder].append(expr);
+//                 var_table.put(var_name, expr);
+//             } else {
+//                 var_table.put(var_name, null);
+//             }
+//         } else if (assign_op.equals(":=")) {
+//             String expr = visit(context.expr());
+//             builder_buf[current_builder].append("var ");
+//             builder_buf[current_builder].append(var_name);
+//             builder_buf[current_builder].append(" = ");
+//             builder_buf[current_builder].append(expr);
+//             var_table.put(var_name, expr);
+//         }
+//         builder_buf[current_builder].append(";\n");
+//         return(null);
+//     }
+//
+//     @Override public String
+//     visitStruct_decl(EdenParser.Struct_declContext context) {
+//         current_builder = Builder.STRUCT;
+//         {
+//             String struct_name = context.getChild(0).getText();
+//             builder_buf[current_builder].append("class ");
+//             builder_buf[current_builder].append(struct_name);
+//             builder_buf[current_builder].append(" {\n");
+//             var var_decl_list = context.var_decl();
+//             for (int var_decl_index = 0;
+//             var_decl_index < var_decl_list.size();
+//             ++var_decl_index) {
+//                 visit(context.var_decl(var_decl_index));
+//             }
+//             builder_buf[current_builder].append("}\n");
+//             struct_list.add(struct_name);
+//         }
+//         current_builder = Builder.DEFAULT;
+//         return(null);
+//     }
+//
+//     @Override public String
+//     visitFunc_decl(EdenParser.Func_declContext context) {
+//         String var_name = context.getChild(0).getText();
+//         builder_buf[current_builder].append("    ".repeat(indent_level));
+//         builder_buf[current_builder].append("public static ");
+//         var return_list = context.return_list();
+//         if (return_list != null) {
+//             visit(return_list);
+//         } else {
+//             builder_buf[current_builder].append("void");
+//         }
+//         builder_buf[current_builder].append(" ");
+//         builder_buf[current_builder].append(var_name);
+//         builder_buf[current_builder].append("(");
+//         if (var_name.equals("main")) {
+//             builder_buf[current_builder].append("String[] args");
+//         } else {
+//             var param_list = context.param_list();
+//             if (param_list != null) {
+//                 visit(param_list);
+//             }
+//         }
+//         builder_buf[current_builder].append(") ");
+//         builder_buf[current_builder].append("{\n");
+//         indent_level += 1;
+//         visit(context.stmt_block());
+//         indent_level -= 1;
+//         builder_buf[current_builder].append("    ".repeat(indent_level));
+//         builder_buf[current_builder].append("}\n");
+//         return(null);
+//     }
+//
+//     @Override public String
+//     visitParam_list(EdenParser.Param_listContext context) {
+//         String var_name = context.getChild(0).getText();
+//         String type_name = context.getChild(2).getText();
+//         builder_buf[current_builder].append(type_name);
+//         builder_buf[current_builder].append(" ");
+//         builder_buf[current_builder].append(var_name);
+//         int child_count = context.getChildCount();
+//         if (child_count > 3) {
+//             builder_buf[current_builder].append(", ");
+//             var param_list = context.param_list();
+//             for (int param_index = 0;
+//                  param_index < param_list.size();
+//                  ++param_index) {
+//                 visit(context.param_list(param_index));
+//             }
+//         }
+//         return(null);
+//     }
+//
+//     @Override public String
+//     visitReturn_list(EdenParser.Return_listContext context) {
+//         String type_name = context.getChild(1).getText();
+//         builder_buf[current_builder].append(type_name);
+//         return(null);
+//     }
+//
+//     //////////////////
+//     // NOTE: Statement
+//     @Override public String
+//     visitAssign_stmt(EdenParser.Assign_stmtContext context) {
+//         String var_name = context.getChild(0).getText();
+//         String expr = visit(context.expr());
+//         builder_buf[current_builder].append("    ".repeat(indent_level));
+//         builder_buf[current_builder].append(var_name);
+//         if (context.getChild(1).getText().equals(".")) {
+//             String member_name = context.getChild(2).getText();
+//             builder_buf[current_builder].append(".");
+//             builder_buf[current_builder].append(member_name);
+//         }
+//         builder_buf[current_builder].append(" = ");
+//         builder_buf[current_builder].append(expr);
+//         builder_buf[current_builder].append(";\n");
+//         return(null);
+//     }
+//
+//     @Override public String
+//     visitFunc_call_stmt(EdenParser.Func_call_stmtContext context) {
+//         builder_buf[current_builder].append("    ".repeat(indent_level));
+//         visit(context.func_call_expr());
+//         builder_buf[current_builder].append(";\n");
+//         return(null);
+//     }
+//
+//     @Override public String
+//     visitReturn_stmt(EdenParser.Return_stmtContext context) {
+//         builder_buf[current_builder].append("    ".repeat(indent_level));
+//         builder_buf[current_builder].append("return");
+//         if (!context.getChild(1).getText().equals(";")) {
+//             String expr = visit(context.expr());
+//             builder_buf[current_builder].append(" ");
+//             builder_buf[current_builder].append(expr);
+//         }
+//         builder_buf[current_builder].append(";\n");
+//         return(null);
+//     }
+//
+//     @Override public String
+//     visitIf_stmt(EdenParser.If_stmtContext context) {
+//         String expr = visit(context.expr());
+//         builder_buf[current_builder].append("    ".repeat(indent_level));
+//         builder_buf[current_builder].append("if ");
+//         builder_buf[current_builder].append("(" + expr + ") ");
+//         builder_buf[current_builder].append("{\n");
+//         indent_level += 1;
+//         visit(context.stmt_block());
+//         indent_level -= 1;
+//         builder_buf[current_builder].append("    ".repeat(indent_level));
+//         builder_buf[current_builder].append("}\n");
+//         return(null);
+//     }
+//
+//     @Override public String
+//     visitStmt_block(EdenParser.Stmt_blockContext context) {
+//         var stmt_list = context.stmt();
+//         for (int stmt_index = 0;
+//              stmt_index < stmt_list.size();
+//              ++stmt_index) {
+//             visit(context.stmt(stmt_index));
+//         }
+//         return(null);
+//     }
+//
+//     ///////////////////
+//     // NOTE: Expression
+//     @Override public String
+//     visitExpr(EdenParser.ExprContext context) {
+//         String expr = context.getText();
+//         return(expr);
+//     }
+//
+//     @Override public String
+//     visitFunc_call_expr(EdenParser.Func_call_exprContext context) {
+//         String func_name = context.getChild(0).getText();
+//         builder_buf[current_builder].append(func_name);
+//         builder_buf[current_builder].append("(");
+//         var expr_list = context.expr();
+//         for (int expr_index = 0;
+//              expr_index < expr_list.size();
+//              ++expr_index) {
+//             String expr = visit(context.expr(expr_index));
+//             builder_buf[current_builder].append(expr);
+//             if (expr_index != expr_list.size() - 1) {
+//                 builder_buf[current_builder].append(", ");
+//             }
+//         }
+//         builder_buf[current_builder].append(")");
+//         return(null);
+//     }
+// }
+
 class ProgramVisitor extends EdenBaseVisitor<String> {
-    StringBuilder builder_buf[]    = new StringBuilder[Builder.MAX];
-    Map<String, String> type_table = new HashMap<>();
-    Map<String, String> var_table  = new HashMap<>();
-    List<String> struct_list       = new ArrayList<>();
+  int indent_level;
+  int curr_builder_index;
+  StringBuilder builders[];
+  Map<String, String> type_table;
 
-    int current_builder = Builder.DEFAULT;
-    int indent_level    = 1;
-
-    public 
-    ProgramVisitor() {
-        for (int i = 0; i < Builder.MAX; ++i) {
-            builder_buf[i] = new StringBuilder();
-        }
-
-        type_table.put("u16",    "char");
-        type_table.put("s32",    "int");
-        type_table.put("f32",    "float");
-        type_table.put("f64",    "double");
-
-        type_table.put("char",   "char");
-        type_table.put("int",    "int");
-        type_table.put("float",  "float");
-        type_table.put("double", "double");
-        type_table.put("string", "String");
+  public 
+  ProgramVisitor() {
+    indent_level = 0;
+    curr_builder_index = Builder.DEFAULT;
+    builders = new StringBuilder[Builder.MAX];
+    for (int i = 0; i < Builder.MAX; ++i) {
+      builders[i] = new StringBuilder();
     }
+    type_table = new HashMap<>();
+    type_table.put("int", "int");
+    type_table.put("float", "float");
+    type_table.put("bool", "boolean");
+  }
 
-    public String
-    get_code_str(String class_name) {
-        String result = String.format(
-            "%s" +
-            "public class %s {\n" +
-            "%s" +
-            "}\n",
-            builder_buf[Builder.STRUCT].toString(),
-            class_name, 
-            builder_buf[Builder.DEFAULT].toString()
-        );
-        return(result);
-    }
+  public String
+  get_code_str(String class_name) {
+    String result = String.format(
+      "%s" +
+      "public class %s {\n" +
+      "%s" +
+      "}\n",
+      builders[Builder.STRUCT].toString(),
+      class_name, 
+      builders[Builder.DEFAULT].toString()
+    );
+    return(result);
+  }
+  
+  private void
+  block_start() {
+    indent_level += 1;
+  };
 
-    ////////////////////
-    // NOTE: Declaration
-    @Override public String
-    visitVar_decl(EdenParser.Var_declContext context) {
-        String var_name = context.getChild(0).getText();
-        String assign_op = context.getChild(1).getText();
-        builder_buf[current_builder].append("    ".repeat(indent_level));
-        if (assign_op.equals(":")) {
-            String type_name = context.getChild(2).getText();
-            if (type_table.containsKey(type_name)) {
-                builder_buf[current_builder].append(type_table.get(type_name));
-            } else {
-                builder_buf[current_builder].append(type_name);
-            }
-            builder_buf[current_builder].append(" ");
-            builder_buf[current_builder].append(var_name);
-            if (struct_list.contains(type_name)) {
-                builder_buf[current_builder].append(" = ");
-                builder_buf[current_builder].append("new " + type_name + "()");
-            } else if (context.getChildCount() > 4) {
-                String expr = visit(context.expr());
-                builder_buf[current_builder].append(" = ");
-                builder_buf[current_builder].append(expr);
-                var_table.put(var_name, expr);
-            } else {
-                var_table.put(var_name, null);
-            }
-        } else if (assign_op.equals(":=")) {
-            String expr = visit(context.expr());
-            builder_buf[current_builder].append("var ");
-            builder_buf[current_builder].append(var_name);
-            builder_buf[current_builder].append(" = ");
-            builder_buf[current_builder].append(expr);
-            var_table.put(var_name, expr);
-        }
-        builder_buf[current_builder].append(";\n");
-        return(null);
-    }
+  private void
+  block_end() {
+    indent_level -= 1;
+  }
 
-    @Override public String
-    visitStruct_decl(EdenParser.Struct_declContext context) {
-        current_builder = Builder.STRUCT;
-        {
-            String struct_name = context.getChild(0).getText();
-            builder_buf[current_builder].append("class ");
-            builder_buf[current_builder].append(struct_name);
-            builder_buf[current_builder].append(" {\n");
-            var var_decl_list = context.var_decl();
-            for (int var_decl_index = 0;
-            var_decl_index < var_decl_list.size();
-            ++var_decl_index) {
-                visit(context.var_decl(var_decl_index));
-            }
-            builder_buf[current_builder].append("}\n");
-            struct_list.add(struct_name);
-        }
-        current_builder = Builder.DEFAULT;
-        return(null);
-    }
+  private void
+  block_add(String str) {
+    builders[curr_builder_index].append("  ".repeat(indent_level));
+    builders[curr_builder_index].append(str);
+    builders[curr_builder_index].append("\n");
+  }
 
-    @Override public String
-    visitFunc_decl(EdenParser.Func_declContext context) {
-        String var_name = context.getChild(0).getText();
-        builder_buf[current_builder].append("    ".repeat(indent_level));
-        builder_buf[current_builder].append("public static ");
-        var return_list = context.return_list();
-        if (return_list != null) {
-            visit(return_list);
-        } else {
-            builder_buf[current_builder].append("void");
-        }
-        builder_buf[current_builder].append(" ");
-        builder_buf[current_builder].append(var_name);
-        builder_buf[current_builder].append("(");
-        if (var_name.equals("main")) {
-            builder_buf[current_builder].append("String[] args");
-        } else {
-            var param_list = context.param_list();
-            if (param_list != null) {
-                visit(param_list);
-            }
-        }
-        builder_buf[current_builder].append(") ");
-        builder_buf[current_builder].append("{\n");
-        indent_level += 1;
-        visit(context.stmt_block());
-        indent_level -= 1;
-        builder_buf[current_builder].append("    ".repeat(indent_level));
-        builder_buf[current_builder].append("}\n");
-        return(null);
+  @Override public String
+  visitProg(EdenParser.ProgContext context) {
+    // var expr_list = context.expr();
+    // block_start();
+    // for (int i = 0; i < expr_list.size(); ++i) {
+    //   String expr = visit(context.expr(i));
+    //   block_add(expr);
+    // }
+    // block_end();
+    var decl_list = context.decl();
+    block_start();
+    block_add("public static void main(String[] args) {");
+    block_start();
+    for (int i = 0; i < decl_list.size(); ++i) {
+      String decl = visit(context.decl(i));
+      block_add(decl);
     }
+    block_end();
+    block_add("}");
+    block_end();
+    return(null);
+  }
 
-    @Override public String
-    visitParam_list(EdenParser.Param_listContext context) {
-        String var_name = context.getChild(0).getText();
-        String type_name = context.getChild(2).getText();
-        builder_buf[current_builder].append(type_name);
-        builder_buf[current_builder].append(" ");
-        builder_buf[current_builder].append(var_name);
-        int child_count = context.getChildCount();
-        if (child_count > 3) {
-            builder_buf[current_builder].append(", ");
-            var param_list = context.param_list();
-            for (int param_index = 0;
-                 param_index < param_list.size();
-                 ++param_index) {
-                visit(context.param_list(param_index));
-            }
-        }
-        return(null);
-    }
+  @Override public String
+  visitExpr(EdenParser.ExprContext context) {
+    String expr = visit(context.getChild(0));
+    return(expr);
+  }
 
-    @Override public String
-    visitReturn_list(EdenParser.Return_listContext context) {
-        String type_name = context.getChild(1).getText();
-        builder_buf[current_builder].append(type_name);
-        return(null);
+  @Override public String
+  visitAddExpr(EdenParser.AddExprContext context) {
+    String left = context.getChild(0).getText();
+    String result = left;
+    int child_count = context.getChildCount();
+    for (int i = 1; i < child_count; i += 2) {
+      String op = context.getChild(i).getText();
+      String right = context.getChild(i+1).getText();
+      result += " " + op + " " + right;
     }
+    return(result);
+  }
 
-    //////////////////
-    // NOTE: Statement
-    @Override public String
-    visitAssign_stmt(EdenParser.Assign_stmtContext context) {
-        String var_name = context.getChild(0).getText();
-        String expr = visit(context.expr());
-        builder_buf[current_builder].append("    ".repeat(indent_level));
-        builder_buf[current_builder].append(var_name);
-        if (context.getChild(1).getText().equals(".")) {
-            String member_name = context.getChild(2).getText();
-            builder_buf[current_builder].append(".");
-            builder_buf[current_builder].append(member_name);
-        }
-        builder_buf[current_builder].append(" = ");
-        builder_buf[current_builder].append(expr);
-        builder_buf[current_builder].append(";\n");
-        return(null);
-    }
-    
-    @Override public String
-    visitFunc_call_stmt(EdenParser.Func_call_stmtContext context) {
-        builder_buf[current_builder].append("    ".repeat(indent_level));
-        visit(context.func_call_expr());
-        builder_buf[current_builder].append(";\n");
-        return(null);
-    }
-
-    @Override public String
-    visitReturn_stmt(EdenParser.Return_stmtContext context) {
-        builder_buf[current_builder].append("    ".repeat(indent_level));
-        builder_buf[current_builder].append("return");
-        if (!context.getChild(1).getText().equals(";")) {
-            String expr = visit(context.expr());
-            builder_buf[current_builder].append(" ");
-            builder_buf[current_builder].append(expr);
-        }
-        builder_buf[current_builder].append(";\n");
-        return(null);
-    }
-
-    @Override public String
-    visitIf_stmt(EdenParser.If_stmtContext context) {
-        String expr = visit(context.expr());
-        builder_buf[current_builder].append("    ".repeat(indent_level));
-        builder_buf[current_builder].append("if ");
-        builder_buf[current_builder].append("(" + expr + ") ");
-        builder_buf[current_builder].append("{\n");
-        indent_level += 1;
-        visit(context.stmt_block());
-        indent_level -= 1;
-        builder_buf[current_builder].append("    ".repeat(indent_level));
-        builder_buf[current_builder].append("}\n");
-        return(null);
-    }
-
-    @Override public String
-    visitStmt_block(EdenParser.Stmt_blockContext context) {
-        var stmt_list = context.stmt();
-        for (int stmt_index = 0;
-             stmt_index < stmt_list.size();
-             ++stmt_index) {
-            visit(context.stmt(stmt_index));
-        }
-        return(null);
-    }
-
-    ///////////////////
-    // NOTE: Expression
-    @Override public String
-    visitExpr(EdenParser.ExprContext context) {
-        String expr = context.getText();
-        return(expr);
-    }
-    
-    @Override public String
-    visitFunc_call_expr(EdenParser.Func_call_exprContext context) {
-        String func_name = context.getChild(0).getText();
-        builder_buf[current_builder].append(func_name);
-        builder_buf[current_builder].append("(");
-        var expr_list = context.expr();
-        for (int expr_index = 0;
-             expr_index < expr_list.size();
-             ++expr_index) {
-            String expr = visit(context.expr(expr_index));
-            builder_buf[current_builder].append(expr);
-            if (expr_index != expr_list.size() - 1) {
-                builder_buf[current_builder].append(", ");
-            }
-        }
-        builder_buf[current_builder].append(")");
-        return(null);
-    }
+  @Override public String
+  visitDecl(EdenParser.DeclContext context) {
+    String name = context.getChild(0).getText();
+    String type = context.getChild(2).getText();
+    String expr = visit(context.getChild(4));
+    type = type_table.get(type);
+    String result = type + " " + name + " = " + expr + ";";
+    return(result);
+  }
 }
 
 public class EdenCompiler {
@@ -301,7 +405,7 @@ public class EdenCompiler {
   }
 
   public static void 
-  main(String[] args) throws Exception {
+  main(String[] args) {
     CmdLineParser cmd_parser = new CmdLineParser(args);
     if (cmd_parser.parse()) {
       String src_file_path = cmd_parser.get_src_file_path();
