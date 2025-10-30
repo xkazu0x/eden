@@ -1,6 +1,32 @@
-1 + 2 - 3 + 4
-3 - 6 + 9
-
-x: int = 10;
-y: float = 8.;
+x: int = 666;
+y: float = 123.;
+result: int = x + y;
+z: double = .45;
+w: int = 123 + .5;
 quit: bool = false;
+name: string = "eden";
+c: char = 'x';
+
+output("what is your name?");
+name: string = input();
+output("my name is" + name);
+
+add0: int = 1 + 2;
+mul0: int = 1 + 2*3;
+mul1: int = 1*2 + 3;
+mul2: int = 1*2*3;
+
+if true {
+  msg: string = "goodbye world.";
+  quit = true;
+  asda = 123;
+  x = true;
+  w = "eden";
+} else {
+  msg: string = "hello world.";
+}
+
+while quit {
+  msg: string = "goodbye world.";
+  output(msg);
+}
