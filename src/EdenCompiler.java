@@ -7,8 +7,10 @@ import java.nio.file.*;
 
 class Builder {
     public static final int DEFAULT = 0;
-    public static final int STRUCT  = 1;
-    public static final int MAX     = 2;
+    public static final int IMPORT  = 1;
+    public static final int STRUCT  = 2;
+    public static final int FUNC    = 3;
+    public static final int MAX     = 4;
 }
 
 class Variable {
@@ -44,8 +46,8 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
   Map<String, Variable> var_table;
   Map<String, String> func_table;
 
-  List<String> warnings;
-  List<String> errors;
+  public List<String> warnings;
+  public List<String> errors;
 
   public 
   ProgramVisitor(String class_name) {
@@ -66,10 +68,25 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     type_table.put("string", "String");
 
     var_table = new HashMap<>();
-
     func_table = new HashMap<>();
-    func_table.put("output", "System.out.println");
-    func_table.put("input", "System.in");
+
+    builders[Builder.IMPORT].append("import java.util.Scanner;\n");
+    builders[Builder.IMPORT].append("\n");
+
+    String output_proc = "  static void output(String str) {\n" +
+                         "    System.out.println(str);\n" +
+                         "  }";
+    String input_proc =  "  static String input() {\n" +
+                         "    Scanner scan = new Scanner(System.in);\n" +
+                         "    String result = scan.nextLine();\n" +
+                         "    return(result);\n" +
+                         "  }";
+    builders[Builder.FUNC].append("  ".repeat(indent_level));
+    builders[Builder.FUNC].append(output_proc);
+    builders[Builder.FUNC].append("\n");
+    builders[Builder.FUNC].append("  ".repeat(indent_level));
+    builders[Builder.FUNC].append(input_proc);
+    builders[Builder.FUNC].append("\n");
 
     warnings = new ArrayList<>();
     errors = new ArrayList<>();
@@ -95,20 +112,18 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
   private String
   build_code() {
     String result = String.format(
+      "%s" + 
       "%s" +
       "public class %s {\n" +
       "%s" +
+      "%s" +
       "}\n",
+      builders[Builder.IMPORT].toString(),
       builders[Builder.STRUCT].toString(),
       class_name, 
+      builders[Builder.FUNC].toString(),
       builders[Builder.DEFAULT].toString()
     );
-    for (String warn : warnings) {
-      System.out.println("[WARN]: " + warn);
-    }
-    for (String error: errors) {
-      System.out.println("[ERROR]: " + error);
-    }
     return(result);
   }
   
@@ -165,7 +180,11 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     if (type.equals("float")) expr += "f";
     check_expr_type(expr, type);
     Variable var = new Variable(name, type, expr);
-    var_table.put(name, var);
+    if (var_table.containsKey(name)) {
+      errors.add("variable already defined: " + name);
+    } else {
+      var_table.put(name, var);
+    }
     String result = type + " " + name + " = " + expr + ";";
     return(result);
   }
@@ -192,8 +211,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     if (context.getChildCount() > 3) { 
       params = visit(context.getChild(2));
     }
-    String func = func_table.get(func_name);
-    String result = func + "(" + params + ");";
+    String result = func_name + "(" + params + ");";
     return(result);
   }
 
@@ -313,8 +331,17 @@ public class EdenCompiler {
 
       ProgramVisitor program = new ProgramVisitor(class_name);
       String code = program.visit(parser.prog());
+      if (!program.warnings.isEmpty()) {
+        for (String str : program.warnings) {
+          System.out.printf("[WARN]: %s\n", str);
+        }
+      }
+      if (!program.errors.isEmpty()) {
+        for (String str : program.errors) {
+          System.out.printf("[ERROR]: %s\n", str);
+        }
+      }
       write_file(dst_file_path, code);
-
       System.out.printf("[INFO]: src: %s\n", src_file_path);
       System.out.printf("[INFO]: dst: %s\n", dst_file_path);
       System.out.printf("-+-File%s+-\n", "-".repeat(class_name.length()));

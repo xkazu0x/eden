@@ -5,11 +5,11 @@ block: (decl | stmt)*;
 
 decl: var_decl
     | attr
-    | func_call
+    | func_call ';'
     ;
 var_decl: NAME ':' NAME '=' expr ';' #VarDecl;
 attr: NAME '=' expr ';';
-func_call: NAME '(' param_list? ')' ';' #FuncCall;
+func_call: NAME '(' param_list? ')' #FuncCall;
 param_list: expr (',' expr)* # ParamList;
 
 stmt: if_stmt
@@ -24,7 +24,7 @@ mul_expr: term (mul_op term)* # MulExpr;
 
 add_op: '+' | '-';
 mul_op: '*' | '/';
-term: NAME | INT | REAL | BOOL | CHAR | STRING;
+term: func_call | NAME | INT | REAL | BOOL | CHAR | STRING;
 
 INT: '0' | [1-9] [0-9]*;
 REAL: ([0-9]* '.' [0-9]+) | ([0-9]+ '.' [0-9]*);

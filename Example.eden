@@ -1,15 +1,19 @@
 x: int = 666;
 y: float = 123.;
-result: int = x + y;
+// result: int = x + y;
 z: double = .45;
-w: int = 123 + .5;
+// w: int = 123 + .5;
 quit: bool = false;
-name: string = "eden";
+lang: string = "eden";
 c: char = 'x';
 
 output("what is your name?");
 name: string = input();
-output("my name is" + name);
+output(name + "?");
+output("I am afraid to say that it is time for you to rest.");
+output("Any last words?");
+last_words: string = input();
+output("Well, See you in hell _partner_.");
 
 add0: int = 1 + 2;
 mul0: int = 1 + 2*3;
@@ -19,13 +23,14 @@ mul2: int = 1*2*3;
 if true {
   msg: string = "goodbye world.";
   quit = true;
-  asda = 123;
-  x = true;
-  w = "eden";
+  // asda = 123;
+  // x = true;
+  // w = "eden";
 } else {
   msg: string = "hello world.";
 }
 
+quit = false;
 while quit {
   msg: string = "goodbye world.";
   output(msg);
