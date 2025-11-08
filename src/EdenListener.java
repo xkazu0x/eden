@@ -49,6 +49,18 @@ public interface EdenListener extends ParseTreeListener {
 	 */
 	void exitVarDecl(EdenParser.VarDeclContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code ImplVarDecl}
+	 * labeled alternative in {@link EdenParser#impl_var_decl}.
+	 * @param ctx the parse tree
+	 */
+	void enterImplVarDecl(EdenParser.ImplVarDeclContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ImplVarDecl}
+	 * labeled alternative in {@link EdenParser#impl_var_decl}.
+	 * @param ctx the parse tree
+	 */
+	void exitImplVarDecl(EdenParser.ImplVarDeclContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link EdenParser#attr}.
 	 * @param ctx the parse tree
 	 */

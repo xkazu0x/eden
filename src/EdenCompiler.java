@@ -5,14 +5,6 @@ import java.util.*;
 import java.io.*;
 import java.nio.file.*;
 
-class Builder {
-    public static final int DEFAULT = 0;
-    public static final int IMPORT  = 1;
-    public static final int STRUCT  = 2;
-    public static final int FUNC    = 3;
-    public static final int MAX     = 4;
-}
-
 class Variable {
   String name;
   String type;
@@ -39,12 +31,9 @@ class Variable {
 class ProgramVisitor extends EdenBaseVisitor<String> {
   String class_name;
   int indent_level;
-  int curr_builder_index;
-  StringBuilder builders[];
 
   Map<String, String> type_table;
   Map<String, Variable> var_table;
-  Map<String, String> func_table;
 
   public List<String> warnings;
   public List<String> errors;
@@ -53,11 +42,6 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
   ProgramVisitor(String class_name) {
     this.class_name = class_name;
     indent_level = 0;
-    curr_builder_index = Builder.DEFAULT;
-    builders = new StringBuilder[Builder.MAX];
-    for (int i = 0; i < Builder.MAX; ++i) {
-      builders[i] = new StringBuilder();
-    }
 
     type_table = new HashMap<>();
     type_table.put("int", "int");
@@ -68,65 +52,18 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     type_table.put("string", "String");
 
     var_table = new HashMap<>();
-    func_table = new HashMap<>();
-
-    builders[Builder.IMPORT].append("import java.util.Scanner;\n");
-    builders[Builder.IMPORT].append("\n");
-
-    String output_proc = "  static void output(String str) {\n" +
-                         "    System.out.println(str);\n" +
-                         "  }";
-    String input_proc =  "  static String input() {\n" +
-                         "    Scanner scan = new Scanner(System.in);\n" +
-                         "    String result = scan.nextLine();\n" +
-                         "    return(result);\n" +
-                         "  }";
-    builders[Builder.FUNC].append("  ".repeat(indent_level));
-    builders[Builder.FUNC].append(output_proc);
-    builders[Builder.FUNC].append("\n");
-    builders[Builder.FUNC].append("  ".repeat(indent_level));
-    builders[Builder.FUNC].append(input_proc);
-    builders[Builder.FUNC].append("\n");
 
     warnings = new ArrayList<>();
     errors = new ArrayList<>();
   }
-  
-  private void
-  block_start() {
-    indent_level += 1;
-  };
-
-  private void
-  block_end() {
-    indent_level -= 1;
-  }
-
-  private void
-  block_add(String str) {
-    builders[curr_builder_index].append("  ".repeat(indent_level));
-    builders[curr_builder_index].append(str);
-    builders[curr_builder_index].append("\n");
-  }
 
   private String
-  build_code() {
-    String result = String.format(
-      "%s" + 
-      "%s" +
-      "public class %s {\n" +
-      "%s" +
-      "%s" +
-      "}\n",
-      builders[Builder.IMPORT].toString(),
-      builders[Builder.STRUCT].toString(),
-      class_name, 
-      builders[Builder.FUNC].toString(),
-      builders[Builder.DEFAULT].toString()
-    );
+  indent_string(String str) {
+    String result = "  ".repeat(indent_level);
+    result += str;
     return(result);
   }
-  
+
   private void
   check_expr_type(String expr, String type) {
     if (type.equals("int")) {
@@ -142,27 +79,40 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
 
   @Override public String
   visitProg(EdenParser.ProgContext context) {
-    block_start();
-    block_add("public static void main(String[] args) {");
-    visit(context.block());
-    block_add("}");
-    block_end();
-    String result = build_code();
+    String result = "";
+    result += "import java.util.Scanner;\n\n";
+    result += "public class " + class_name + " {\n";
+    indent_level += 1;
+    result += indent_string("static void output(String str) {\n");
+    indent_level += 1;
+    result += indent_string("System.out.println(str);\n");
+    indent_level -= 1;
+    result += indent_string("}\n");
+    result += indent_string("static String input() {\n");
+    indent_level += 1;
+    result += indent_string("Scanner scan = new Scanner(System.in);\n");
+    result += indent_string("String result = scan.nextLine();\n");
+    result += indent_string("return(result);\n");
+    indent_level -= 1;
+    result += indent_string("}\n");
+    result += indent_string("public static void main(String[] args) {\n");
+    result += visit(context.block());
+    result += indent_string("}\n");
+    indent_level -= 1;
+    result += "}\n";
     return(result);
   }
 
   @Override public String
   visitBlock(EdenParser.BlockContext context) {
-    block_start();
+    indent_level += 1;
+    String result = "";
     int child_count = context.getChildCount();
     for (int i = 0; i < child_count; ++i) {
-      String block = visit(context.getChild(i));
-      if (block != null) {
-        block_add(block);
-      }
+      result += visit(context.getChild(i));
     }
-    block_end();
-    return(null);
+    indent_level -= 1;
+    return(result);
   }
 
   @Override public String
@@ -176,6 +126,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     String name = context.getChild(0).getText();
     String type = context.getChild(2).getText();
     String expr = visit(context.getChild(4));
+
     type = type_table.get(type);
     if (type.equals("float")) expr += "f";
     check_expr_type(expr, type);
@@ -185,7 +136,17 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     } else {
       var_table.put(name, var);
     }
-    String result = type + " " + name + " = " + expr + ";";
+
+    String result = indent_string(type + " " + name + " = " + expr + ";\n");
+    return(result);
+  }
+
+  @Override public String
+  visitImplVarDecl(EdenParser.ImplVarDeclContext context) {
+    String name = context.getChild(0).getText();
+    String expr = visit(context.getChild(2));
+    String type = "var";
+    String result = indent_string(type + " " + name + " = " + expr + ";\n");
     return(result);
   }
 
@@ -200,7 +161,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     } else {
       errors.add("use of undeclared variable: " + var_name);
     }
-    String result = var_name + " = " + expr + ";";
+    String result = indent_string(var_name + " = " + expr + ";\n");
     return(result);
   }
 
@@ -211,7 +172,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     if (context.getChildCount() > 3) { 
       params = visit(context.getChild(2));
     }
-    String result = func_name + "(" + params + ");";
+    String result = indent_string(func_name + "(" + params + ");\n");
     return(result);
   }
 
@@ -230,24 +191,24 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
   @Override public String
   visitIfStmt(EdenParser.IfStmtContext context) {
     String expr = visit(context.getChild(1));
-    block_add("if (" + expr + ") {");
-    visit(context.block(0));
+    String result = indent_string("if (" + expr + ") {\n");
+    result += visit(context.block(0));
     int child_count = context.getChildCount();
     if (child_count > 5) {
-      block_add("} else {");
-      visit(context.block(1));
+      result += indent_string("} else {\n");
+      result += visit(context.block(1));
     }
-    block_add("}");
-    return(null);
+    result += indent_string("}\n");
+    return(result);
   }
 
   @Override public String
   visitWhileStmt(EdenParser.WhileStmtContext context) {
     String expr = visit(context.getChild(1));
-    block_add("while (" + expr + ") {");
-    visit(context.block());
-    block_add("}");
-    return(null);
+    String result = indent_string("while (" + expr + ") {\n");
+    result += visit(context.block());
+    result += indent_string("}\n");
+    return(result);
   }
 
   @Override public String

@@ -35,6 +35,13 @@ public interface EdenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVarDecl(EdenParser.VarDeclContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ImplVarDecl}
+	 * labeled alternative in {@link EdenParser#impl_var_decl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitImplVarDecl(EdenParser.ImplVarDeclContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link EdenParser#attr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

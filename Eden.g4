@@ -4,10 +4,12 @@ prog: block;
 block: (decl | stmt)*;
 
 decl: var_decl
+    | impl_var_decl
     | attr
     | func_call ';'
     ;
 var_decl: NAME ':' NAME '=' expr ';' #VarDecl;
+impl_var_decl: NAME ':=' expr ';' #ImplVarDecl;
 attr: NAME '=' expr ';';
 func_call: NAME '(' param_list? ')' #FuncCall;
 param_list: expr (',' expr)* # ParamList;
