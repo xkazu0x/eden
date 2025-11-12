@@ -88,7 +88,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     result += indent_string("System.out.println(str);\n");
     indent_level -= 1;
     result += indent_string("}\n");
-    result += indent_string("static String input() {\n");
+    result += indent_string("static String input_string() {\n");
     indent_level += 1;
     result += indent_string("Scanner scan = new Scanner(System.in);\n");
     result += indent_string("String result = scan.nextLine();\n");
@@ -151,7 +151,13 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
   }
 
   @Override public String
-  visitAttr(EdenParser.AttrContext context) {
+  visitStmt(EdenParser.StmtContext context) {
+    String stmt = visit(context.getChild(0));
+    return(stmt);
+  }
+
+  @Override public String
+  visitAssignStmt(EdenParser.AssignStmtContext context) {
     String var_name = context.getChild(0).getText();
     String expr = visit(context.getChild(2));
     if (var_table.containsKey(var_name)) {
@@ -166,25 +172,9 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
   }
 
   @Override public String
-  visitFuncCall(EdenParser.FuncCallContext context) {
-    String func_name = context.getChild(0).getText();
-    String params = "";
-    if (context.getChildCount() > 3) { 
-      params = visit(context.getChild(2));
-    }
-    String result = indent_string(func_name + "(" + params + ");\n");
-    return(result);
-  }
-
-  @Override public String
-  visitParamList(EdenParser.ParamListContext context) {
+  visitFuncCallStmt(EdenParser.FuncCallStmtContext context) {
     String result = visit(context.getChild(0));
-    int child_count = context.getChildCount();
-    if (child_count > 1) {
-      for (int i = 1; i < child_count; ++i) {
-        result += ", " + visit(context.getChild(i));
-      }
-    }
+    result += ";\n";
     return(result);
   }
 
@@ -212,11 +202,34 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
   }
 
   @Override public String
+  visitFuncCall(EdenParser.FuncCallContext context) {
+    String func_name = context.getChild(0).getText();
+    String params = "";
+    if (context.getChildCount() > 3) { 
+      params = visit(context.getChild(2));
+    }
+    String result = indent_string(func_name + "(" + params + ")");
+    return(result);
+  }
+
+  @Override public String
+  visitParamList(EdenParser.ParamListContext context) {
+    String result = visit(context.getChild(0));
+    int child_count = context.getChildCount();
+    if (child_count > 1) {
+      for (int i = 1; i < child_count; ++i) {
+        result += ", " + visit(context.getChild(i));
+      }
+    }
+    return(result);
+  }
+
+  @Override public String
   visitExpr(EdenParser.ExprContext context) {
     String expr = visit(context.getChild(0));
     return(expr);
   }
-  
+
   @Override public String
   visitAddExpr(EdenParser.AddExprContext context) {
     String left = visit(context.getChild(0));
@@ -292,6 +305,7 @@ public class EdenCompiler {
 
       ProgramVisitor program = new ProgramVisitor(class_name);
       String code = program.visit(parser.prog());
+
       if (!program.warnings.isEmpty()) {
         for (String str : program.warnings) {
           System.out.printf("[WARN]: %s\n", str);
@@ -302,6 +316,7 @@ public class EdenCompiler {
           System.out.printf("[ERROR]: %s\n", str);
         }
       }
+
       write_file(dst_file_path, code);
       System.out.printf("[INFO]: src: %s\n", src_file_path);
       System.out.printf("[INFO]: dst: %s\n", dst_file_path);

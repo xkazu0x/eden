@@ -42,31 +42,25 @@ public interface EdenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitImplVarDecl(EdenParser.ImplVarDeclContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link EdenParser#attr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAttr(EdenParser.AttrContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code FuncCall}
-	 * labeled alternative in {@link EdenParser#func_call}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFuncCall(EdenParser.FuncCallContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ParamList}
-	 * labeled alternative in {@link EdenParser#param_list}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitParamList(EdenParser.ParamListContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link EdenParser#stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitStmt(EdenParser.StmtContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AssignStmt}
+	 * labeled alternative in {@link EdenParser#assign_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignStmt(EdenParser.AssignStmtContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code FuncCallStmt}
+	 * labeled alternative in {@link EdenParser#func_call_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFuncCallStmt(EdenParser.FuncCallStmtContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code IfStmt}
 	 * labeled alternative in {@link EdenParser#if_stmt}.
@@ -81,6 +75,20 @@ public interface EdenVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitWhileStmt(EdenParser.WhileStmtContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code FuncCall}
+	 * labeled alternative in {@link EdenParser#func_call}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFuncCall(EdenParser.FuncCallContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ParamList}
+	 * labeled alternative in {@link EdenParser#param_list}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParamList(EdenParser.ParamListContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link EdenParser#expr}.
 	 * @param ctx the parse tree

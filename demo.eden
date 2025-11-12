@@ -1,0 +1,24 @@
+x: int = 727;
+y := 727;
+
+expr0 := 1 + 2*3;
+expr1 := 1*2 + 3;
+
+output("tell me, what is your name?");
+name := input_string();
+output(name + "? HAHAHAHAHA");
+output("WHATA STRANGE NAME!");
+
+quit: bool = false;
+
+if quit {
+  output("goodbye world.");
+} else {
+  output("hello world.");
+  quit = true;
+}
+
+while quit {
+  output("goodbye world.");
+  quit = false;
+}

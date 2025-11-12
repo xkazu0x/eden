@@ -10,11 +10,11 @@ c: char = 'x';
 impl := 0;
  
 output("what is your name?");
-name: string = input();
+name: string = input_string();
 output(name + "?");
 output("I am afraid to say that it is time for you to rest.");
 output("Any last words?");
-last_words: string = input();
+last_words: string = input_string();
 output("Well, See you in hell _partner_.");
  
 add0: int = 1 + 2;
