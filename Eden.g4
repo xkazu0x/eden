@@ -27,15 +27,15 @@ param_list: expr (',' expr)*              # ParamList;
 
 // NOTE: Expressions
 expr: add_expr;
-add_expr: mul_expr (add_op mul_expr)* # AddExpr;
-mul_expr: term (mul_op term)*         # MulExpr;
-term: '(' expr ')'
-    | func_call_expr
-    | type_expr
-    ;
+add_expr: mul_expr (add_op mul_expr)*   # AddExpr;
+mul_expr: base_expr (mul_op base_expr)* # MulExpr;
+base_expr: '(' expr ')'
+         | func_call_expr
+         | term
+         ;
 add_op: '+' | '-';
 mul_op: '*' | '/';
-type_expr: NAME | INT| REAL | BOOL | CHAR | STRING;
+term: NAME | INT| REAL | BOOL | CHAR | STRING;
 
 // NOTE: Data Types
 INT: '0' | [1-9] [0-9]*;

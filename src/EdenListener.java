@@ -177,15 +177,15 @@ public interface EdenListener extends ParseTreeListener {
 	 */
 	void exitMulExpr(EdenParser.MulExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link EdenParser#term}.
+	 * Enter a parse tree produced by {@link EdenParser#base_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterTerm(EdenParser.TermContext ctx);
+	void enterBase_expr(EdenParser.Base_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link EdenParser#term}.
+	 * Exit a parse tree produced by {@link EdenParser#base_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitTerm(EdenParser.TermContext ctx);
+	void exitBase_expr(EdenParser.Base_exprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link EdenParser#add_op}.
 	 * @param ctx the parse tree
@@ -207,13 +207,13 @@ public interface EdenListener extends ParseTreeListener {
 	 */
 	void exitMul_op(EdenParser.Mul_opContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link EdenParser#type_expr}.
+	 * Enter a parse tree produced by {@link EdenParser#term}.
 	 * @param ctx the parse tree
 	 */
-	void enterType_expr(EdenParser.Type_exprContext ctx);
+	void enterTerm(EdenParser.TermContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link EdenParser#type_expr}.
+	 * Exit a parse tree produced by {@link EdenParser#term}.
 	 * @param ctx the parse tree
 	 */
-	void exitType_expr(EdenParser.Type_exprContext ctx);
+	void exitTerm(EdenParser.TermContext ctx);
 }

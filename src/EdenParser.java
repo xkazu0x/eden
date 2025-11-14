@@ -23,13 +23,13 @@ public class EdenParser extends Parser {
 		RULE_prog = 0, RULE_block = 1, RULE_decl = 2, RULE_var_decl = 3, RULE_impl_var_decl = 4, 
 		RULE_stmt = 5, RULE_assign_stmt = 6, RULE_func_call_stmt = 7, RULE_if_stmt = 8, 
 		RULE_while_stmt = 9, RULE_func_call_expr = 10, RULE_param_list = 11, RULE_expr = 12, 
-		RULE_add_expr = 13, RULE_mul_expr = 14, RULE_term = 15, RULE_add_op = 16, 
-		RULE_mul_op = 17, RULE_type_expr = 18;
+		RULE_add_expr = 13, RULE_mul_expr = 14, RULE_base_expr = 15, RULE_add_op = 16, 
+		RULE_mul_op = 17, RULE_term = 18;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"prog", "block", "decl", "var_decl", "impl_var_decl", "stmt", "assign_stmt", 
 			"func_call_stmt", "if_stmt", "while_stmt", "func_call_expr", "param_list", 
-			"expr", "add_expr", "mul_expr", "term", "add_op", "mul_op", "type_expr"
+			"expr", "add_expr", "mul_expr", "base_expr", "add_op", "mul_op", "term"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -1053,11 +1053,11 @@ public class EdenParser extends Parser {
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class MulExprContext extends Mul_exprContext {
-		public List<TermContext> term() {
-			return getRuleContexts(TermContext.class);
+		public List<Base_exprContext> base_expr() {
+			return getRuleContexts(Base_exprContext.class);
 		}
-		public TermContext term(int i) {
-			return getRuleContext(TermContext.class,i);
+		public Base_exprContext base_expr(int i) {
+			return getRuleContext(Base_exprContext.class,i);
 		}
 		public List<Mul_opContext> mul_op() {
 			return getRuleContexts(Mul_opContext.class);
@@ -1090,7 +1090,7 @@ public class EdenParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(121);
-			term();
+			base_expr();
 			setState(127);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -1100,7 +1100,7 @@ public class EdenParser extends Parser {
 				setState(122);
 				mul_op();
 				setState(123);
-				term();
+				base_expr();
 				}
 				}
 				setState(129);
@@ -1121,38 +1121,38 @@ public class EdenParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class TermContext extends ParserRuleContext {
+	public static class Base_exprContext extends ParserRuleContext {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public Func_call_exprContext func_call_expr() {
 			return getRuleContext(Func_call_exprContext.class,0);
 		}
-		public Type_exprContext type_expr() {
-			return getRuleContext(Type_exprContext.class,0);
+		public TermContext term() {
+			return getRuleContext(TermContext.class,0);
 		}
-		public TermContext(ParserRuleContext parent, int invokingState) {
+		public Base_exprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_term; }
+		@Override public int getRuleIndex() { return RULE_base_expr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof EdenListener ) ((EdenListener)listener).enterTerm(this);
+			if ( listener instanceof EdenListener ) ((EdenListener)listener).enterBase_expr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof EdenListener ) ((EdenListener)listener).exitTerm(this);
+			if ( listener instanceof EdenListener ) ((EdenListener)listener).exitBase_expr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof EdenVisitor ) return ((EdenVisitor<? extends T>)visitor).visitTerm(this);
+			if ( visitor instanceof EdenVisitor ) return ((EdenVisitor<? extends T>)visitor).visitBase_expr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final TermContext term() throws RecognitionException {
-		TermContext _localctx = new TermContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_term);
+	public final Base_exprContext base_expr() throws RecognitionException {
+		Base_exprContext _localctx = new Base_exprContext(_ctx, getState());
+		enterRule(_localctx, 30, RULE_base_expr);
 		try {
 			setState(136);
 			_errHandler.sync(this);
@@ -1179,7 +1179,7 @@ public class EdenParser extends Parser {
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(135);
-				type_expr();
+				term();
 				}
 				break;
 			}
@@ -1298,35 +1298,35 @@ public class EdenParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class Type_exprContext extends ParserRuleContext {
+	public static class TermContext extends ParserRuleContext {
 		public TerminalNode NAME() { return getToken(EdenParser.NAME, 0); }
 		public TerminalNode INT() { return getToken(EdenParser.INT, 0); }
 		public TerminalNode REAL() { return getToken(EdenParser.REAL, 0); }
 		public TerminalNode BOOL() { return getToken(EdenParser.BOOL, 0); }
 		public TerminalNode CHAR() { return getToken(EdenParser.CHAR, 0); }
 		public TerminalNode STRING() { return getToken(EdenParser.STRING, 0); }
-		public Type_exprContext(ParserRuleContext parent, int invokingState) {
+		public TermContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_type_expr; }
+		@Override public int getRuleIndex() { return RULE_term; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof EdenListener ) ((EdenListener)listener).enterType_expr(this);
+			if ( listener instanceof EdenListener ) ((EdenListener)listener).enterTerm(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof EdenListener ) ((EdenListener)listener).exitType_expr(this);
+			if ( listener instanceof EdenListener ) ((EdenListener)listener).exitTerm(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof EdenVisitor ) return ((EdenVisitor<? extends T>)visitor).visitType_expr(this);
+			if ( visitor instanceof EdenVisitor ) return ((EdenVisitor<? extends T>)visitor).visitTerm(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final Type_exprContext type_expr() throws RecognitionException {
-		Type_exprContext _localctx = new Type_exprContext(_ctx, getState());
-		enterRule(_localctx, 36, RULE_type_expr);
+	public final TermContext term() throws RecognitionException {
+		TermContext _localctx = new TermContext(_ctx, getState());
+		enterRule(_localctx, 36, RULE_term);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);

@@ -270,7 +270,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
   }
 
   @Override public String
-  visitTerm(EdenParser.TermContext context) {
+  visitBase_expr(EdenParser.Base_exprContext context) {
     String result = "";
     int child_count = context.getChildCount();
     if (child_count > 1) {
@@ -282,7 +282,7 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
   }
 
   @Override public String
-  visitType_expr(EdenParser.Type_exprContext context) {
+  visitTerm(EdenParser.TermContext context) {
     String result = context.getChild(0).getText();
     return(result);
   }

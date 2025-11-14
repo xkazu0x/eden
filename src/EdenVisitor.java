@@ -110,11 +110,11 @@ public interface EdenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMulExpr(EdenParser.MulExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link EdenParser#term}.
+	 * Visit a parse tree produced by {@link EdenParser#base_expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitTerm(EdenParser.TermContext ctx);
+	T visitBase_expr(EdenParser.Base_exprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link EdenParser#add_op}.
 	 * @param ctx the parse tree
@@ -128,9 +128,9 @@ public interface EdenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMul_op(EdenParser.Mul_opContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link EdenParser#type_expr}.
+	 * Visit a parse tree produced by {@link EdenParser#term}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitType_expr(EdenParser.Type_exprContext ctx);
+	T visitTerm(EdenParser.TermContext ctx);
 }

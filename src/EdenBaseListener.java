@@ -196,13 +196,13 @@ public class EdenBaseListener implements EdenListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTerm(EdenParser.TermContext ctx) { }
+	@Override public void enterBase_expr(EdenParser.Base_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTerm(EdenParser.TermContext ctx) { }
+	@Override public void exitBase_expr(EdenParser.Base_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -232,13 +232,13 @@ public class EdenBaseListener implements EdenListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterType_expr(EdenParser.Type_exprContext ctx) { }
+	@Override public void enterTerm(EdenParser.TermContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitType_expr(EdenParser.Type_exprContext ctx) { }
+	@Override public void exitTerm(EdenParser.TermContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

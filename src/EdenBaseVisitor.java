@@ -122,7 +122,7 @@ public class EdenBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements E
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitTerm(EdenParser.TermContext ctx) { return visitChildren(ctx); }
+	@Override public T visitBase_expr(EdenParser.Base_exprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -143,5 +143,5 @@ public class EdenBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements E
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitType_expr(EdenParser.Type_exprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitTerm(EdenParser.TermContext ctx) { return visitChildren(ctx); }
 }
