@@ -17,21 +17,25 @@ stmt: assign_stmt
     | while_stmt
     ;
 assign_stmt: NAME '=' expr ';'                            # AssignStmt;
-func_call_stmt: func_call ';'                             # FuncCallStmt;
+func_call_stmt: func_call_expr ';'                        # FuncCallStmt;
 if_stmt: 'if' expr '{' block '}' ('else' '{' block '}')?  # IfStmt;
 while_stmt: 'while' expr '{' block '}'                    # WhileStmt; 
 
 // NOTE: Helpers
-func_call: NAME '(' param_list? ')' # FuncCall;
-param_list: expr (',' expr)*        # ParamList;
+func_call_expr: NAME '(' param_list? ')'  # FuncCallExpr;
+param_list: expr (',' expr)*              # ParamList;
 
 // NOTE: Expressions
 expr: add_expr;
 add_expr: mul_expr (add_op mul_expr)* # AddExpr;
 mul_expr: term (mul_op term)*         # MulExpr;
+term: '(' expr ')'
+    | func_call_expr
+    | type_expr
+    ;
 add_op: '+' | '-';
 mul_op: '*' | '/';
-term: '(' expr ')' | func_call | NAME | INT | REAL | BOOL | CHAR | STRING;
+type_expr: NAME | INT| REAL | BOOL | CHAR | STRING;
 
 // NOTE: Data Types
 INT: '0' | [1-9] [0-9]*;

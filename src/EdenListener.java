@@ -119,17 +119,17 @@ public interface EdenListener extends ParseTreeListener {
 	 */
 	void exitWhileStmt(EdenParser.WhileStmtContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code FuncCall}
-	 * labeled alternative in {@link EdenParser#func_call}.
+	 * Enter a parse tree produced by the {@code FuncCallExpr}
+	 * labeled alternative in {@link EdenParser#func_call_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterFuncCall(EdenParser.FuncCallContext ctx);
+	void enterFuncCallExpr(EdenParser.FuncCallExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code FuncCall}
-	 * labeled alternative in {@link EdenParser#func_call}.
+	 * Exit a parse tree produced by the {@code FuncCallExpr}
+	 * labeled alternative in {@link EdenParser#func_call_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitFuncCall(EdenParser.FuncCallContext ctx);
+	void exitFuncCallExpr(EdenParser.FuncCallExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ParamList}
 	 * labeled alternative in {@link EdenParser#param_list}.
@@ -177,6 +177,16 @@ public interface EdenListener extends ParseTreeListener {
 	 */
 	void exitMulExpr(EdenParser.MulExprContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link EdenParser#term}.
+	 * @param ctx the parse tree
+	 */
+	void enterTerm(EdenParser.TermContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EdenParser#term}.
+	 * @param ctx the parse tree
+	 */
+	void exitTerm(EdenParser.TermContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link EdenParser#add_op}.
 	 * @param ctx the parse tree
 	 */
@@ -197,13 +207,13 @@ public interface EdenListener extends ParseTreeListener {
 	 */
 	void exitMul_op(EdenParser.Mul_opContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link EdenParser#term}.
+	 * Enter a parse tree produced by {@link EdenParser#type_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterTerm(EdenParser.TermContext ctx);
+	void enterType_expr(EdenParser.Type_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link EdenParser#term}.
+	 * Exit a parse tree produced by {@link EdenParser#type_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitTerm(EdenParser.TermContext ctx);
+	void exitType_expr(EdenParser.Type_exprContext ctx);
 }

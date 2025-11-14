@@ -83,18 +83,27 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     result += "import java.util.Scanner;\n\n";
     result += "public class " + class_name + " {\n";
     indent_level += 1;
+
     result += indent_string("static void output(String str) {\n");
     indent_level += 1;
     result += indent_string("System.out.println(str);\n");
     indent_level -= 1;
     result += indent_string("}\n");
-    result += indent_string("static String input_string() {\n");
+
+    result += indent_string("static void output(int num) {\n");
+    indent_level += 1;
+    result += indent_string("System.out.println(num);\n");
+    indent_level -= 1;
+    result += indent_string("}\n");
+
+    result += indent_string("static String input() {\n");
     indent_level += 1;
     result += indent_string("Scanner scan = new Scanner(System.in);\n");
     result += indent_string("String result = scan.nextLine();\n");
     result += indent_string("return(result);\n");
     indent_level -= 1;
     result += indent_string("}\n");
+
     result += indent_string("public static void main(String[] args) {\n");
     result += visit(context.block());
     result += indent_string("}\n");
@@ -202,13 +211,17 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
   }
 
   @Override public String
-  visitFuncCall(EdenParser.FuncCallContext context) {
+  visitFuncCallExpr(EdenParser.FuncCallExprContext context) {
     String func_name = context.getChild(0).getText();
     String params = "";
     if (context.getChildCount() > 3) { 
       params = visit(context.getChild(2));
     }
-    String result = indent_string(func_name + "(" + params + ")");
+    ParseTree tree = context.getParent();
+    String result = func_name + "(" + params + ")";
+    if (tree.getChildCount() > 1) {
+      result = indent_string(result);
+    }
     return(result);
   }
 
@@ -245,14 +258,32 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
 
   @Override public String
   visitMulExpr(EdenParser.MulExprContext context) {
-    String left = context.getChild(0).getText();
+    String left = visit(context.getChild(0));
     String result = left;
     int child_count = context.getChildCount();
     for (int i = 1; i < child_count; i += 2) {
       String op = context.getChild(i).getText();
-      String right = context.getChild(i+1).getText();
+      String right = visit(context.getChild(i+1));
       result += " " + op + " " + right;
     }
+    return(result);
+  }
+
+  @Override public String
+  visitTerm(EdenParser.TermContext context) {
+    String result = "";
+    int child_count = context.getChildCount();
+    if (child_count > 1) {
+      result = "(" + visit(context.getChild(1)) + ")";
+    } else {
+      result = visit(context.getChild(0));
+    }
+    return(result);
+  }
+
+  @Override public String
+  visitType_expr(EdenParser.Type_exprContext context) {
+    String result = context.getChild(0).getText();
     return(result);
   }
 }

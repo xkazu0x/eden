@@ -27,3 +27,10 @@ cd build
 if [ -v test ]; then $grun Eden prog -gui ../Example.eden; fi
 if [ -v run ]; then java EdenCompiler ../Example.eden -o ../local; fi
 cd ..
+
+if [ -v run ]; then
+  cd local;
+  javac Demo.java;
+  java Demo;
+  cd ..;
+fi
