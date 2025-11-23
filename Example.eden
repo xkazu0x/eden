@@ -1,39 +1,17 @@
-x: int = 666;
-y: float = 123.;
-result: int = x + y;
-z: double = .45;
-w: int = 123 + .5;
-quit: bool = false;
-lang: string = "eden";
-c: char = 'x';
+a: int = 9;
+b := 6;
+x := 3;
+result := a*x + b;
 
-impl := 0;
- 
-output("what is your name?");
-name: string = input_string();
-output(name + "?");
-output("I am afraid to say that it is time for you to rest.");
-output("Any last words?");
-last_words: string = input_string();
-output("Well, See you in hell _partner_.");
- 
-add0: int = 1 + 2;
-mul0: int = 1 + 2*3;
-mul1: int = 1*2 + 3;
-mul2: int = 1*2*3;
-
-if true {
-  msg: string = "goodbye world.";
-  quit = true;
-  asda = 123;
-  x = true;
-  w = "eden";
+quit: bool = true;
+if quit {
+  output("goodbye world.");
 } else {
-  msg: string = "hello world.";
+  output("hello world.");
 }
 
-quit = false;
-while quit {
-  msg: string = "goodbye world.";
-  output(msg);
-}
+// accumulator := 0;
+// while true {
+//   accumulator = accumulator + 1;
+//   output("accumulator: " + accumulator);
+// }

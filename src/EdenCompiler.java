@@ -135,8 +135,8 @@ class ProgramVisitor extends EdenBaseVisitor<String> {
     String name = context.getChild(0).getText();
     String type = context.getChild(2).getText();
     String expr = visit(context.getChild(4));
-
     type = type_table.get(type);
+
     if (type.equals("float")) expr += "f";
     check_expr_type(expr, type);
     Variable var = new Variable(name, type, expr);

@@ -23,14 +23,19 @@ if not exist local mkdir local
 %antlr4% Eden.g4 -o src -visitor
 %compile% src\*.java
 
-pushd build
-if "%tree%"=="1" %grun% Eden prog -gui ..\demo.eden
-if "%run%"=="1" java EdenCompiler ../demo.eden -o ../local
-popd
+if "%tree%"=="1" (
+  pushd build
+  %grun% Eden prog -gui ..\example.eden
+  popd
+)
 
 if "%run%"=="1" (
+  pushd build
+  java EdenCompiler ../example.eden -o ../local
+  popd
+
   pushd local
-  javac Demo.java
-  java Demo
+  javac Example.java
+  java Example
   popd
 )

@@ -23,14 +23,19 @@ mkdir -p local
 $antlr4 Eden.g4 -o src -visitor
 $compile src/*.java
 
-cd build
-if [ -v test ]; then $grun Eden prog -gui ../Example.eden; fi
-if [ -v run ]; then java EdenCompiler ../Example.eden -o ../local; fi
-cd ..
+if [ -v test ]; then
+  cd build;
+  $grun Eden prog -gui ../example.eden;
+  cd ..;
+fi
 
 if [ -v run ]; then
+  cd build;
+  java EdenCompiler ../example.eden -o ../local;
+  cd ..;
+
   cd local;
-  javac Demo.java;
-  java Demo;
+  javac Example.java;
+  java Example;
   cd ..;
 fi
